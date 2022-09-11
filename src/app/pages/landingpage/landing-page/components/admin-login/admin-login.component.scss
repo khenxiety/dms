@@ -1,0 +1,47 @@
+
+
+*,h1,h2,h3,h4,h5{
+    font-family: 'Nunito', sans-serif;
+}
+.page-wrapper{
+    min-height:100vh ;
+    padding-top: 85px;
+    background-color: #dae3e7;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.container{
+    display: flex;
+    justify-content: center;
+}
+
+.login-form{
+    max-width: 600px;
+    background-color: white;
+
+
+    padding: 3em;
+
+    .header{
+        display: block;
+        margin-bottom: 2em;
+        h3{
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+        }
+    }
+    input[type=email],input[type=password]{
+        height: 50px;
+        background: #e9ecef;
+    }
+
+
+    .custom-btn{
+        background-color: #495057;
+        color: white;
+        height: 50px;
+
+    }
+}

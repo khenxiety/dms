@@ -1,0 +1,83 @@
+<div class="page-wrapper">
+  <div class="container h-100" style="height: 100vh">
+    <div
+      class="card login-form"
+      data-aos="fade-in"
+      data-aos-offset="100"
+      data-aos-duration="1000"
+    >
+      <form action="">
+        <div class="header">
+          <h3 style="display: flex; align-items: center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              fill="red"
+              class="bi bi-person-circle me-2"
+              viewBox="0 0 16 16"
+            >
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+              <path
+                fill-rule="evenodd"
+                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
+              />
+            </svg>
+
+            Admin Login
+          </h3>
+          <small class="text-muted">
+            <em
+              >Login using your administrator email and password. Then click the
+              <span class="text-black fw-bold">"Login"</span> button.</em
+            >
+          </small>
+        </div>
+        <div class="mb-3">
+          <!-- <label for="exampleFormControlInput1" class="form-label"
+                >Email address</label
+              > -->
+          <input
+            type="email"
+            class="form-control"
+            id="exampleFormControlInput1"
+            placeholder="Email"
+          />
+        </div>
+        <div class="mb-3">
+          <!-- <label for="password" class="form-label">Password</label> -->
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            placeholder="Password"
+          />
+        </div>
+        <div class="mb-3">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              id="flexCheckDefault"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Show Password
+            </label>
+          </div>
+        </div>
+        <div class="mb-3">
+          <!-- <label for="password" class="form-label">Password</label> -->
+          <button
+            type="submit"
+            class="btn w-100 custom-btn"
+            (click)="login()"
+            mat-raised-button
+          >
+            Login
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

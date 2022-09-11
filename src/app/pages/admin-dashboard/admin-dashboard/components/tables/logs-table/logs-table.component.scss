@@ -1,0 +1,63 @@
+.full-width-table {
+  width: 100%;
+}
+
+*,h1,h2,h3,h4,h5{
+  font-family: 'Nunito', sans-serif;
+}
+.btn{
+  border-radius: 5px;
+}
+.action{
+  display: flex;
+  flex-direction: row;
+  padding-block: .8em;
+}
+.action>* + *{
+  margin-left: 10px;
+
+  input{
+    width: 350px;
+    height: 100%;
+    background-color: #f2f2f3 ;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+  }
+}
+.modal
+{
+  .form-control{
+    border-radius: 5px;
+    font-size: 15px;
+  }
+}
+.action-btn{
+  color: white;
+}
+
+
+.custom-btn{
+  background-color: var(--bs-success);
+  color: white;
+  display: flex;
+  align-items: center;
+  span{
+    margin-left: .7em;
+  }
+
+
+  &:hover{
+    
+  color: white;
+  }
+}
+
+.action-cell >*+*{
+margin-left: 10px;
+}
+
+
+.td{
+  padding-block: 20px;
+}

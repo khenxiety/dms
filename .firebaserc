@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "manuscript-management-system": {
+      "hosting": {
+        "frontend": [
+          "manuscript-management-system"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "manuscript-management-system"
+  }
+}

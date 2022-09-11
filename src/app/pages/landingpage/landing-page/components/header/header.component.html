@@ -1,0 +1,77 @@
+<nav class="navbar bg-light fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <img
+        src="assets/logo.png"
+        alt="Logo"
+        class="d-inline-block align-text-center"
+      />
+      <span style="margin-left: 10px">BATANGAS STATE UNIVERSITY</span>
+    </a>
+    <button
+      [ngClass]="openMenu ? 'clear-btn menu close' : 'clear-btn menu '"
+      (click)="toggleMenu()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="40"
+        height="25"
+        fill="currentColor"
+        class="bi bi-list"
+        viewBox="0 0 16 16"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
+        />
+      </svg>
+    </button>
+    <ul [ngClass]="openMenu ? 'nav ' : 'nav close'">
+      <li routerLink="/hero" (click)="close()">
+        <a class="nav-link text-black">Home</a>
+      </li>
+      <li routerLink="/about-us" (click)="close()">
+        <a class="nav-link text-black">About</a>
+      </li>
+
+      <li class="nav-item dropdown text-black">
+        <a
+          class="nav-link dropdown-toggle text-black"
+          href="#"
+          role="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Services
+        </a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Action</a></li>
+          <li><a class="dropdown-item" href="#">Another action</a></li>
+          <li><hr class="dropdown-divider" /></li>
+          <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+      </li>
+
+      <li class="nav-item dropdown text-black">
+        <a
+          class="nav-link dropdown-toggle text-black"
+          href="#"
+          role="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Help
+        </a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Action</a></li>
+          <li><a class="dropdown-item" href="#">Another action</a></li>
+          <li><hr class="dropdown-divider" /></li>
+          <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+      </li>
+      <li routerLink="/login" (click)="close()">
+        <a class="nav-link text-black">Login</a>
+      </li>
+    </ul>
+  </div>
+</nav>

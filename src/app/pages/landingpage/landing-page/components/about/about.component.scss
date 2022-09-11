@@ -1,0 +1,37 @@
+.page-wrapper{
+    min-height:100vh ;
+    padding-top: 86px;
+    padding-bottom: 20px;
+
+
+    display: flex;
+    align-items: center;
+    overflow-y: hidden;
+}
+
+*,h1,h2,h3,h4,h5{
+    font-family: 'Nunito', sans-serif;
+}   
+.card{
+    height: 100%;
+    color: var(--text-black);
+    padding-block: 2em;
+
+    h4{
+    color: #ff3e3e;
+    font-size: 2em;
+
+    }
+}
+.card-header{
+    border: none;
+    background-color:#fff;
+}
+
+
+
+@media (max-width:768px){
+    .top{
+        margin-top: 3.5em;
+    }
+}

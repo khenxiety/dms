@@ -1,0 +1,42 @@
+<div class="dashboard">
+  <app-dashboard-header></app-dashboard-header>
+
+  <div class="container" style="height: calc(100vh - 81px)">
+    <div class="row">
+      <div class="col-3">
+        <div class="side-bar">
+          <div class="side-bar-content">
+            <ul class="side-nav">
+              <li class="active">Documents</li>
+              <li>Administration</li>
+
+              <li>Administrative Skills</li>
+              <li
+                data-bs-toggle="tooltip"
+                data-bs-title="Collecting Development,Organization and preservation "
+              >
+                Collecting Development,Organization and...
+              </li>
+
+              <li>Service and Utilization</li>
+
+              <li>Physical Set-up and Facilities</li>
+              <li>Financial Support</li>
+
+              <li>Linkages</li>
+              <li>ISO Documents</li>
+
+              <li>Other Documents</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div
+        class="col-9"
+        style="background-color: white; min-height: calc(100vh - 81px)"
+      >
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>

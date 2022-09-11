@@ -1,0 +1,66 @@
+.dashboard{
+    padding-top: 81px;
+    min-height: 100vh;
+    background-color: #dae3e7;
+    overflow-y: scroll;
+
+}
+
+.side-bar{
+    background-color: #3e4246;
+    height: 100%;
+    width: 300px;
+    position: fixed;
+    padding-block: 1.5em;
+
+
+    .side-bar-content{
+
+        .side-nav{
+            list-style: none;
+            padding: 0;
+            
+
+            li{
+                padding-block: 1.2em;
+                padding-inline: 2em;
+                color: white;
+                cursor: pointer;
+                &:hover{
+                background-color: #cb2d3c;
+
+                }
+
+            
+
+            }
+            li.active{
+                
+                    background-color: #cb2d3c;
+    
+                
+            }
+        }
+    }
+}
+.button-scroll{
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    display:flex ;
+    justify-content: right;
+    padding: 2em 4em;
+
+    .fab{
+        background-color: var(--bs-secondary);
+        opacity: .6;
+
+        &:hover{
+            opacity: 1;
+
+        }
+
+        
+        
+    }
+}

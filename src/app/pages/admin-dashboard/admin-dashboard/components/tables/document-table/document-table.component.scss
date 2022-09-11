@@ -1,0 +1,69 @@
+.full-width-table {
+  width: 100%;
+}
+button{
+  border-radius: 5px;
+}
+.action-btn{
+  color: white;
+}
+.modal
+{
+  .form-control{
+    border-radius: 5px;
+    font-size: 15px;
+  }
+}
+.edit-btn{
+  background-color: var(--bs-success);
+}
+.delete-btn{
+  background-color: var(--bs-danger);
+
+}
+.download-btn{
+  background-color: var(--bs-primary);
+
+}
+.action{
+  display: flex;
+  flex-direction: row;
+  padding-block: .8em;
+}
+.action>* + *{
+  margin-left: 10px;
+
+  input{
+    width: 350px;
+    height: 100%;
+    background-color: #f2f2f3 ;
+    border: none;
+    font-size: 15px;
+    border-radius: 5px;
+  }
+}
+
+.custom-btn{
+  background-color: #cb2d3c;
+  color: white;
+  display: flex;
+  align-items: center;
+  span{
+    margin-left: .7em;
+  }
+
+
+  &:hover{
+    background-color: #b32836;
+  color: white;
+  }
+}
+
+.action-cell >*+*{
+margin-left: 10px;
+}
+
+
+.td{
+  padding-block: 20px;
+}
