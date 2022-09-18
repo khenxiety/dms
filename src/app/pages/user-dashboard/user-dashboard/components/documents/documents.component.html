@@ -1,3 +1,8 @@
 <div class="page-wrapper">
-  <app-document-table></app-document-table>
+  <app-bread-crumbs [data]="'Documents (Shared to me)'"></app-bread-crumbs>
+  <app-document-table
+    [currentUser]="profile.username"
+    [currentUserCampus]="profile.campus"
+    [currentUserId]="profile.idNumber"
+  ></app-document-table>
 </div>

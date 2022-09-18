@@ -1,100 +1,148 @@
 <div class="mat-elevation-z0">
   <div class="action">
+    <div class="action">
+      <button
+        class="custom-btn"
+        data-bs-toggle="modal"
+        data-bs-target="#uploadModal"
+        mat-raised-button
+      >
+        <!-- <button class="custom-btn" mat-raised-button (click)="inputField.click()"> -->
+        <input type="file" #inputField hidden />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-person-plus-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"
+          />
+        </svg>
+        <span>Add New User</span>
+      </button>
+      <form action="">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search"
+          (keyup)="searchFilter($event)"
+        />
+      </form>
+    </div>
     <button
-      class="custom-btn"
-      data-bs-toggle="modal"
-      data-bs-target="#uploadModal"
-      mat-raised-button
+      mat-mini-fab
+      (click)="ngAfterViewInit()"
+      style="background: none; border-radius: 50%"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
         height="16"
-        fill="currentColor"
-        class="bi bi-person-plus-fill"
+        fill="black"
+        class="bi bi-arrow-repeat"
         viewBox="0 0 16 16"
       >
         <path
-          d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
+          d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"
         />
         <path
           fill-rule="evenodd"
-          d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"
+          d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
         />
       </svg>
-      <span>Add New User</span>
     </button>
-
-    <form action="">
-      <input type="text" class="form-control" placeholder="Search" />
-    </form>
   </div>
   <table mat-table class="full-width-table" matSort aria-label="Elements">
     <!-- Id Column -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
-      <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+      <td mat-cell *matCellDef="let row">{{ row.idNumber }}</td>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Fullname</th>
-      <td mat-cell *matCellDef="let row" class="td">{{ row.name }}</td>
+      <td mat-cell *matCellDef="let row" class="td">{{ row.fullName }}</td>
     </ng-container>
     <ng-container matColumnDef="file">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Campus</th>
-      <td mat-cell *matCellDef="let row" class="td">{{ row.name }}</td>
+      <td mat-cell *matCellDef="let row" class="td">{{ row.campus }}</td>
     </ng-container>
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-      <td mat-cell *matCellDef="let row" class="td">{{ row.name }}</td>
+      <td mat-cell *matCellDef="let row" class="td">{{ row.email }}</td>
     </ng-container>
     <ng-container matColumnDef="classification">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Username</th>
-      <td mat-cell *matCellDef="let row" class="td">{{ row.name }}</td>
+      <td mat-cell *matCellDef="let row" class="td">{{ row.username }}</td>
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>User Status</th>
+      <td mat-cell *matCellDef="let row" class="td">
+        <select
+          #status
+          class="form-select"
+          style="max-width: 120px"
+          aria-label="Default select example"
+          [value]="row.status"
+          (change)="updateStatus(status.value, row)"
+        >
+          <option value="pending">Unverified</option>
+          <option value="approved">Verified</option>
+        </select>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
       <td mat-cell *matCellDef="let row" class="action-cell">
-        <button
-          type="button"
-          class="action-btn edit-btn"
-          data-bs-toggle="modal"
-          data-bs-target="#updateModal"
-          mat-mini-fab
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-pencil-square"
-            viewBox="0 0 16 16"
+        <div class="button-group">
+          <button
+            type="button"
+            class="action-btn edit-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#updateModal"
+            mat-mini-fab
           >
-            <path
-              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-            />
-            <path
-              fill-rule="evenodd"
-              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
-            />
-          </svg>
-        </button>
-        <button type="button" class="action-btn delete-btn" mat-mini-fab>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-trash-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"
-            />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-pencil-square"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+              />
+              <path
+                fill-rule="evenodd"
+                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+              />
+            </svg>
+          </button>
+          <button type="button" class="action-btn delete-btn" mat-mini-fab>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-trash-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"
+              />
+            </svg>
+          </button>
+        </div>
       </td>
     </ng-container>
 
@@ -104,7 +152,7 @@
 
   <mat-paginator
     #paginator
-    [length]="dataSource?.data?.length"
+    [length]="dataSource.data?.length"
     [pageIndex]="0"
     [pageSize]="5"
     [pageSizeOptions]="[5, 10, 20]"
@@ -122,7 +170,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title" id="exampleModalLabel">Upload Document</h1>
+        <h1 class="modal-title" id="exampleModalLabel">Add New User</h1>
         <button
           type="button"
           class="btn-close"
@@ -131,95 +179,153 @@
         ></button>
       </div>
       <div class="modal-body">
-        <div class="mb-3">
-          <label for="filename" class="form-label">Filename:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="filename"
-            placeholder=""
-          />
-        </div>
-        <div class="mb-3">
-          <label for="formFile" class="form-label">File upload:</label>
-          <input class="form-control" type="file" id="formFile" />
-        </div>
-        <div class="mb-3">
-          <label for="description" class="form-label">Description:</label>
-          <textarea class="form-control" id="description" rows="3"></textarea>
-        </div>
-        <div class="mb-3">
-          <label for="select" class="form-label">Classification:</label>
+        <form action="" [formGroup]="usersForm">
+          <div class="mb-3">
+            <label for="filename" class="form-label">ID No:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="id"
+              placeholder=""
+              formControlName="idNumber"
+            />
+            <small
+              *ngIf="
+                usersForm.controls['idNumber'].hasError('required') &&
+                usersForm.controls['idNumber'].touched
+              "
+              >Please fill up the missing field.</small
+            >
+          </div>
+          <div class="mb-3">
+            <label for="filename" class="form-label">Fullname:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="fullname"
+              placeholder=""
+              formControlName="fullName"
+            />
+            <small
+              *ngIf="
+                usersForm.controls['fullName'].hasError('required') &&
+                usersForm.controls['fullName'].touched
+              "
+              >Please fill up the missing field.</small
+            >
+          </div>
+          <div class="mb-3">
+            <label for="select" class="form-label">Campus:</label>
 
-          <select
-            class="form-select"
-            aria-label="Default select example"
-            id="select"
-          >
-            <option selected>Classification:</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="select" class="form-label">File Type:</label>
-
-          <select
-            class="form-select"
-            aria-label="Default select example"
-            id="select"
-          >
-            <option selected>Type:</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="formFile" class="form-label">User:</label>
-          <input class="form-control" type="file" id="formFile" />
-        </div>
-        <div class="mb-3">
-          <label for="select" class="form-label">Campus:</label>
-
-          <select
-            class="form-select"
-            aria-label="Default select example"
-            id="select"
-          >
-            <option selected>Select Campus:</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="select" class="form-label">Campus:</label>
-
-          <input type="date" class="form-control" />
-        </div>
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              id="select"
+              formControlName="campus"
+            >
+              <option selected>Select Campus:</option>
+              <option value="BatstateU-Alangilan">BatstateU-Alangilan</option>
+              <option value="BatstateU-Lobo">BatstateU-Lobo</option>
+              <option value="BatstateU-Mabini">BatstateU-Mabini</option>
+            </select>
+            <small
+              *ngIf="
+                usersForm.controls['campus'].hasError('required') &&
+                usersForm.controls['campus'].touched
+              "
+              >Please fill up the missing field.</small
+            >
+          </div>
+          <div class="mb-3">
+            <label for="filename" class="form-label">Email:</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              placeholder=""
+              formControlName="email"
+            />
+            <small
+              *ngIf="
+                usersForm.controls['email'].hasError('required') &&
+                usersForm.controls['email'].touched
+              "
+              >Please fill up the missing field.</small
+            >
+          </div>
+          <div class="mb-3">
+            <label for="filename" class="form-label">Username:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              placeholder=""
+              formControlName="username"
+            />
+            <small
+              *ngIf="
+                usersForm.controls['username'].hasError('required') &&
+                usersForm.controls['username'].touched
+              "
+              >Please fill up the missing field.</small
+            >
+          </div>
+          <div class="mb-3">
+            <label for="filename" class="form-label">Password:</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              placeholder=""
+              formControlName="password"
+              #input
+            />
+            <small
+              *ngIf="
+                usersForm.controls['password'].hasError('required') &&
+                usersForm.controls['password'].touched
+              "
+              >Please fill up the missing field.</small
+            >
+          </div>
+          <div class="mb-3">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="flexCheckDefault"
+                (click)="showPassword(input)"
+              />
+              <label class="form-check-label" for="flexCheckDefault">
+                Show Password
+              </label>
+            </div>
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           Close
         </button>
-        <button type="button" class="btn custom-btn">Save changes</button>
+        <button type="button" class="btn custom-btn" (click)="addNewUser()">
+          Save changes
+        </button>
       </div>
     </div>
   </div>
 </div>
-<div
+<!-- <div
   class="modal fade"
   id="updateModal"
   tabindex="-1"
-  aria-labelledby="exampleModalLabel"
+  aria-labelledby="updateModal"
   aria-hidden="true"
 >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title" id="exampleModalLabel">Update Document</h1>
+        <h1 class="modal-title" id="exampleModalLabel">Update New User</h1>
         <button
           type="button"
           class="btn-close"
@@ -228,81 +334,129 @@
         ></button>
       </div>
       <div class="modal-body">
-        <div class="mb-3">
-          <label for="filename" class="form-label">Filename:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="filename"
-            placeholder=""
-          />
-        </div>
-        <div class="mb-3">
-          <label for="formFile" class="form-label">File upload:</label>
-          <input class="form-control" type="file" id="formFile" />
-        </div>
-        <div class="mb-3">
-          <label for="description" class="form-label">Description:</label>
-          <textarea class="form-control" id="description" rows="3"></textarea>
-        </div>
-        <div class="mb-3">
-          <label for="select" class="form-label">Classification:</label>
+        <form action="" [formGroup]="updateForm">
+          <div class="mb-3">
+            <label for="filename" class="form-label">ID No:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="updateid"
+              placeholder=""
+              formControlName="idNumber"
+            />
+            <small
+              *ngIf="
+                updateForm.controls['idNumber'].hasError('required') &&
+                updateForm.controls['idNumber'].touched
+              "
+              >Please fill up the missing field.</small
+            >
+          </div>
+          <div class="mb-3">
+            <label for="filename" class="form-label">Fullname:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="updatefullname"
+              placeholder=""
+              formControlName="fullName"
+            />
+            <small
+              *ngIf="
+                updateForm.controls['fullName'].hasError('required') &&
+                updateForm.controls['fullName'].touched
+              "
+              >Please fill up the missing field.</small
+            >
+          </div>
+          <div class="mb-3">
+            <label for="select" class="form-label">Campus:</label>
 
-          <select
-            class="form-select"
-            aria-label="Default select example"
-            id="select"
-          >
-            <option selected>Classification:</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="select" class="form-label">File Type:</label>
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              id="updateselect"
+              formControlName="campus"
+            >
+              <option selected>Select Campus:</option>
+              <option value="BatstateU-Alangilan">BatstateU-Alangilan</option>
+              <option value="BatstateU-Lobo">BatstateU-Lobo</option>
+              <option value="BatstateU-Mabini">BatstateU-Mabini</option>
+            </select>
+            <small
+              *ngIf="
+                updateForm.controls['campus'].hasError('required') &&
+                updateForm.controls['campus'].touched
+              "
+              >Please fill up the missing field.</small
+            >
+          </div>
+          <div class="mb-3">
+            <label for="filename" class="form-label">Email:</label>
+            <input
+              type="email"
+              class="form-control"
+              id="updateemail"
+              placeholder=""
+              formControlName="email"
+            />
+            <small
+              *ngIf="
+                updateForm.controls['email'].hasError('required') &&
+                updateForm.controls['email'].touched
+              "
+              >Please fill up the missing field.</small
+            >
+          </div>
+          <div class="mb-3">
+            <label for="filename" class="form-label">Username:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="updateusername"
+              placeholder=""
+              formControlName="username"
+            />
+            <small
+              *ngIf="
+                updateForm.controls['username'].hasError('required') &&
+                updateForm.controls['username'].touched
+              "
+              >Please fill up the missing field.</small
+            >
+          </div>
+          <div class="mb-3">
+            <label for="select" class="form-label">Status:</label>
 
-          <select
-            class="form-select"
-            aria-label="Default select example"
-            id="select"
-          >
-            <option selected>Type:</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="formFile" class="form-label">User:</label>
-          <input class="form-control" type="file" id="formFile" />
-        </div>
-        <div class="mb-3">
-          <label for="select" class="form-label">Campus:</label>
-
-          <select
-            class="form-select"
-            aria-label="Default select example"
-            id="select"
-          >
-            <option selected>Select Campus:</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="select" class="form-label">Campus:</label>
-
-          <input type="date" class="form-control" />
-        </div>
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              id="status"
+              formControlName="status"
+            >
+              <option selected>Select Campus:</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Verified</option>
+              <option value="other">Other</option>
+            </select>
+            <small
+              *ngIf="
+                updateForm.controls['status'].hasError('required') &&
+                updateForm.controls['status'].touched
+              "
+              >Please fill up the missing field.</small
+            >
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           Close
         </button>
-        <button type="button" class="btn custom-btn">Save changes</button>
+        <button type="button" class="btn custom-btn" (click)="addNewUser()">
+          Save changes
+        </button>
       </div>
     </div>
   </div>
-</div>
+</div> -->

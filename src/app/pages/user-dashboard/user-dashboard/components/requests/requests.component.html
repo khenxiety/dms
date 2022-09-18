@@ -1,0 +1,154 @@
+<div class="page-wrapper">
+  <div class="container-fluid">
+    <app-bread-crumbs [data]="'Requests'"></app-bread-crumbs>
+
+    <div class="row h-100 mt-2">
+      <div class="col-lg-5">
+        <div class="card">
+          <div class="card-header"><h2 class="m-0">Request a Document</h2></div>
+          <div class="card-body">
+            <form action="" [formGroup]="formBuild">
+              <div class="mb-3">
+                <label for="File" class="form-label">File:</label>
+                <select
+                  formControlName="file"
+                  class="form-select"
+                  aria-label="Default select example"
+                >
+                  <option
+                    *ngFor="let files of documentsList"
+                    value="{{ files.id }}"
+                  >
+                    <div>{{ files.fileName }}</div>
+                  </option>
+                </select>
+
+                <!-- <input
+                  list="ShowDataList"
+                  class="form-control"
+                  placeholder="Search / Select"
+                  formControlName="file"
+                />
+
+                <datalist id="ShowDataList">
+                  <option
+                    *ngFor="let files of documentsList"
+                    value="{{ files.fileName }}"
+                  >
+                    {{ files.id }}
+                  </option>
+                </datalist> -->
+
+                <small
+                  *ngIf="
+                    formBuild.controls['file'].hasError('required') &&
+                    formBuild.controls['file'].touched
+                  "
+                  class="text-danger"
+                  >Please select a file.</small
+                >
+              </div>
+              <div class="mb-3">
+                <label for="Purpose" class="form-label">Purpose:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Purpose"
+                  formControlName="purpose"
+                />
+                <small
+                  *ngIf="
+                    formBuild.controls['purpose'].hasError('required') &&
+                    formBuild.controls['purpose'].touched
+                  "
+                  class="text-danger"
+                  >Please put a purpose.</small
+                >
+              </div>
+
+              <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label"
+                  >Message</label
+                >
+                <textarea
+                  class="form-control"
+                  id="exampleFormControlTextarea1"
+                  rows="3"
+                  formControlName="message"
+                ></textarea>
+                <small
+                  *ngIf="
+                    formBuild.controls['message'].hasError('required') &&
+                    formBuild.controls['message'].touched
+                  "
+                  class="text-danger"
+                  >Please put a message.</small
+                >
+              </div>
+              <div class="">
+                <button
+                  mat-raised-button
+                  class="custom-btn"
+                  (click)="addRequest()"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-send"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"
+                    />
+                  </svg>
+                  Submit Request
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="card" style="max-height: 577px">
+          <div class="card-header"><h2 class="m-0">Requests List</h2></div>
+
+          <div class="card-body" style="overflow-y: scroll">
+            <table class="table table-striped">
+              <thead
+                class="p-sticky"
+                style="position: sticky; top: 0; background: white; margin: 0"
+              >
+                <tr>
+                  <th scope="col">Request No.</th>
+                  <th scope="col">File</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of requestsData; let i = index">
+                  <th scope="row">{{ i + 1 }}</th>
+                  <td>{{ data.fileRequested }}</td>
+                  <td>{{ data.date | date: "medium" }}</td>
+                  <td>
+                    <span
+                      [ngClass]="
+                        data.status == 'approved'
+                          ? 'badge text-bg-success'
+                          : 'badge text-bg-warning'
+                      "
+                      >{{ data.status }}</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

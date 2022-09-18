@@ -14,14 +14,85 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { AuthGuardService as AuthGuard } from 'src/app/services/auth/auth-guard.service';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { RequestsComponent } from './components/requests/requests.component';
+import { BreadCrumbsComponent } from './components/bread-crumbs/bread-crumbs.component';
+import { AdministrationComponent } from './components/administration/administration.component';
+import { AdministrativeStaffComponent } from './components/administrative-staff/administrative-staff.component';
+import { CdopComponent } from './components/cdop/cdop.component';
+import { ServicesUtilizationComponent } from './components/services-utilization/services-utilization.component';
+import { PsufComponent } from './components/psuf/psuf.component';
+import { FinancialSupportComponent } from './components/financial-support/financial-support.component';
+import { LinkagesComponent } from './components/linkages/linkages.component';
+import { IsoComponent } from './components/iso/iso.component';
+import { OtherDocumentsComponent } from './components/other-documents/other-documents.component';
+
 const routes: Routes = [
   {
     path: 'user-dashboard',
+    canActivate: [AuthGuard],
     component: UserDashboardComponent,
     children: [
       {
         path: 'documents',
         component: DocumentsComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'administration',
+        component: AdministrationComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'administrative-staff',
+        component: AdministrativeStaffComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'cdop',
+        component: CdopComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'services-utilization',
+        component: ServicesUtilizationComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'psuf',
+        component: PsufComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'financial-support',
+        component: FinancialSupportComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'linkages',
+        component: LinkagesComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'iso-documents',
+        component: IsoComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'request-document',
+        component: RequestsComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'other-documents',
+        component: OtherDocumentsComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'user-profile',
+        component: UserProfileComponent,
+        canActivate: [AuthGuard],
       },
       {
         path: '',
@@ -43,6 +114,18 @@ const routes: Routes = [
     DashboardHeaderComponent,
     DocumentsComponent,
     DocumentTableComponent,
+    UserProfileComponent,
+    RequestsComponent,
+    BreadCrumbsComponent,
+    AdministrationComponent,
+    AdministrativeStaffComponent,
+    CdopComponent,
+    ServicesUtilizationComponent,
+    PsufComponent,
+    FinancialSupportComponent,
+    LinkagesComponent,
+    IsoComponent,
+    OtherDocumentsComponent,
   ],
   imports: [
     CommonModule,

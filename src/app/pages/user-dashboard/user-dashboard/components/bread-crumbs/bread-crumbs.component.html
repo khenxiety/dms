@@ -1,0 +1,15 @@
+<div class="breadcrumbs">
+  <nav aria-label="breadcrumb m-0">
+    <ol class="breadcrumb m-0">
+      <li class="breadcrumb-item"><a>User</a></li>
+      <li
+        class="breadcrumb-item"
+        *ngIf="data != 'Requests' && data != 'User Profile'"
+      >
+        Documents
+      </li>
+
+      <li class="breadcrumb-item active" aria-current="page">{{ data }}</li>
+    </ol>
+  </nav>
+</div>

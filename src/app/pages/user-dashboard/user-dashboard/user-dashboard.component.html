@@ -1,42 +1,188 @@
 <div class="dashboard">
-  <app-dashboard-header></app-dashboard-header>
+  <app-dashboard-header [headerName]="profile?.username"></app-dashboard-header>
+  <div [ngClass]="isCollapsed ? 'side-bar collapsed' : 'side-bar'">
+    <div class="side-bar-content">
+      <ul class="side-nav">
+        <li
+          data-bs-toggle="collapse"
+          data-bs-target="#home-collapse"
+          aria-expanded="false"
+          routerLinkActive="active"
+          (click)="isAccordOpen()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-folder-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3zm-8.322.12C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139z"
+            />
+          </svg>
+          <span>Documents</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            [ngClass]="
+              isCollapsed2 ? 'bi-chevron-right open' : 'bi-chevron-right'
+            "
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
 
-  <div class="container" style="height: calc(100vh - 81px)">
-    <div class="row">
-      <div class="col-3">
-        <div class="side-bar">
-          <div class="side-bar-content">
-            <ul class="side-nav">
-              <li class="active">Documents</li>
-              <li>Administration</li>
-
-              <li>Administrative Skills</li>
-              <li
-                data-bs-toggle="tooltip"
-                data-bs-title="Collecting Development,Organization and preservation "
-              >
-                Collecting Development,Organization and...
+          <div class="collapse mt-3" id="home-collapse" style="">
+            <ul class="btn-toggle-nav list-unstyled fw-normal small">
+              <li routerLink="./documents" routerLinkActive="activeClass">
+                <a
+                  class="link-dark d-inline-flex text-white text-decoration-none rounded"
+                  >Shared to me</a
+                >
               </li>
-
-              <li>Service and Utilization</li>
-
-              <li>Physical Set-up and Facilities</li>
-              <li>Financial Support</li>
-
-              <li>Linkages</li>
-              <li>ISO Documents</li>
-
-              <li>Other Documents</li>
+              <li routerLink="./administration" routerLinkActive="activeClass">
+                <a
+                  class="link-dark d-inline-flex text-white text-decoration-none rounded"
+                  >Administration</a
+                >
+              </li>
+              <li
+                routerLink="./administrative-staff"
+                routerLinkActive="activeClass"
+              >
+                <a
+                  class="link-dark d-inline-flex text-white text-decoration-none rounded"
+                  >Administrative Staffs</a
+                >
+              </li>
+              <li routerLink="./cdop" routerLinkActive="activeClass">
+                <a
+                  class="link-dark d-inline-flex text-white text-decoration-none rounded"
+                  >Collecting Development...</a
+                >
+              </li>
+              <li
+                routerLink="./services-utilization"
+                routerLinkActive="activeClass"
+              >
+                <a
+                  class="link-dark d-inline-flex text-white text-decoration-none rounded"
+                  >Services and Utilization</a
+                >
+              </li>
+              <li routerLink="./psuf" routerLinkActive="activeClass">
+                <a
+                  class="link-dark d-inline-flex text-white text-decoration-none rounded"
+                  >Physical Set-up and Facilities</a
+                >
+              </li>
+              <li
+                routerLink="./financial-support"
+                routerLinkActive="activeClass"
+              >
+                <a
+                  class="link-dark d-inline-flex text-white text-decoration-none rounded"
+                  >Financial Support</a
+                >
+              </li>
+              <li routerLink="./linkages" routerLinkActive="activeClass">
+                <a
+                  class="link-dark d-inline-flex text-white text-decoration-none rounded"
+                  >Linkages</a
+                >
+              </li>
+              <li routerLink="./iso-documents" routerLinkActive="activeClass">
+                <a
+                  class="link-dark d-inline-flex text-white text-decoration-none rounded"
+                  >ISO Documents</a
+                >
+              </li>
+              <li routerLink="./other-documents" routerLinkActive="activeClass">
+                <a
+                  class="link-dark d-inline-flex text-white text-decoration-none rounded"
+                  >Other Documents</a
+                >
+              </li>
             </ul>
           </div>
-        </div>
-      </div>
-      <div
-        class="col-9"
-        style="background-color: white; min-height: calc(100vh - 81px)"
-      >
-        <router-outlet></router-outlet>
+        </li>
+
+        <li routerLink="./request-document" routerLinkActive="active">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-file-earmark-arrow-up-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM6.354 9.854a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 8.707V12.5a.5.5 0 0 1-1 0V8.707L6.354 9.854z"
+            />
+          </svg>
+          <span>My Requests</span>
+        </li>
+        <li routerLink="./user-profile" routerLinkActive="active">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-person-square"
+            viewBox="0 0 16 16"
+          >
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+            <path
+              d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"
+            />
+          </svg>
+          <span>Manage User Profile</span>
+        </li>
+      </ul>
+      <div class="closer">
+        <button class="no-style" (click)="collapsed()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="white"
+            [ngClass]="
+              isCollapsed
+                ? 'bi bi-chevron-double-left collapsed'
+                : 'bi bi-chevron-double-left'
+            "
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   </div>
+
+  <div [ngClass]="isCollapsed ? 'page-wrapper collapsed' : 'page-wrapper '">
+    <router-outlet></router-outlet>
+  </div>
 </div>
+<ngx-spinner
+  bdColor="rgb(255,255,255,0.8)"
+  size="small"
+  color="#fff"
+  type="ball-scale-multiple"
+  template="<img src='https://sustainability.batstate-u.edu.ph/wp-content/uploads/2021/09/batstateu-redspartan-e1602756308679.png' />"
+>
+</ngx-spinner>

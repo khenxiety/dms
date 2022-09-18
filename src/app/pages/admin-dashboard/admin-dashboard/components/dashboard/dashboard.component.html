@@ -9,20 +9,20 @@
   </div>
 
   <div class="container-fluid p-0 mt-4">
-    <div class="row">
+    <div class="row row-cols-sm-3">
       <div class="col">
         <div class="card">
           <div class="container-fluid">
             <div class="row">
-              <div class="col-8">
+              <div class="col-lg-8 col-md-8">
                 <h3>Documents</h3>
-                <h2>5</h2>
+                <h2>{{ documents.length }}</h2>
                 <small>Total number of Documents</small>
               </div>
-              <div class="col-4">
+              <div class="col-lg-4 col-md-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="60"
+                  width="60%"
                   height="60"
                   fill="currentColor"
                   class="bi bi-folder-fill"
@@ -41,15 +41,15 @@
         <div class="card">
           <div class="container-fluid">
             <div class="row">
-              <div class="col-8">
-                <h3>Categories</h3>
-                <h2>5</h2>
-                <small>Total number of Categories</small>
+              <div class="col-lg-8 col-md-8">
+                <h3>Requests</h3>
+                <h2>{{ requests.length }}</h2>
+                <small>Total number of Requests</small>
               </div>
-              <div class="col-4">
+              <div class="col-lg-4 col-md-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="60"
+                  width="60%"
                   height="60"
                   fill="currentColor"
                   class="bi bi-list-ul"
@@ -69,15 +69,15 @@
         <div class="card">
           <div class="container-fluid">
             <div class="row">
-              <div class="col-8">
+              <div class="col-lg-8 col-md-8">
                 <h3>Users</h3>
-                <h2>5</h2>
+                <h2>{{ users.length }}</h2>
                 <small>Total number of Users</small>
               </div>
-              <div class="col-4">
+              <div class="col-lg-4 col-md-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="60"
+                  width="60%"
                   height="60"
                   fill="currentColor"
                   class="bi bi-people-fill"
@@ -101,31 +101,33 @@
 
     <div class="row mt-4">
       <div class="col">
-        <div class="charts">
-          <div class="line">
-            <canvas
-              baseChart
-              width="400"
-              height="400"
-              [type]="'line'"
-              [data]="lineChartData"
-              [options]="lineChartOptions"
-              [legend]="lineChartLegend"
-            >
-            </canvas>
-          </div>
+        <div class="charts p-2">
+          <div class="row">
+            <div class="col">
+              <canvas
+                baseChart
+                width="400"
+                height="400"
+                [type]="'line'"
+                [data]="lineChartData"
+                [options]="lineChartOptions"
+                [legend]="lineChartLegend"
+              >
+              </canvas>
+            </div>
 
-          <div class="pie">
-            <canvas
-              baseChart
-              [type]="'pie'"
-              [datasets]="pieChartDatasets"
-              [labels]="pieChartLabels"
-              [options]="pieChartOptions"
-              [plugins]="pieChartPlugins"
-              [legend]="pieChartLegend"
-            >
-            </canvas>
+            <div class="col" style="display: grid; place-items: center">
+              <canvas
+                baseChart
+                [type]="'pie'"
+                [datasets]="pieChartDatasets"
+                [labels]="pieChartLabels"
+                [options]="pieChartOptions"
+                [plugins]="pieChartPlugins"
+                [legend]="pieChartLegend"
+              >
+              </canvas>
+            </div>
           </div>
         </div>
       </div>

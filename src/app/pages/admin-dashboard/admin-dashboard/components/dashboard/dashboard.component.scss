@@ -1,5 +1,5 @@
 .page-wrapper{
-    padding-block: 1.5em ;
+    padding: 1.5em 1em;
 }
 
 .breadcrumbs{
@@ -19,9 +19,5 @@
 }
 .charts{
     background-color: white;
-    display:flex ;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 1.2em;
+    
 }

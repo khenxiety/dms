@@ -1,60 +1,136 @@
 <div class="dashboard">
   <app-dashboard-header></app-dashboard-header>
+  <div [ngClass]="isCollapsed ? 'side-bar collapsed' : 'side-bar'">
+    <div class="side-bar-content">
+      <ul class="side-nav">
+        <li routerLink="./dashboard" routerLinkActive="active">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-graph-up"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M0 0h1v15h15v1H0V0Zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z"
+            />
+          </svg>
+          <span>Dashboard</span>
+        </li>
+        <li routerLink="./manage-documents" routerLinkActive="active">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-folder-plus"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="m.5 3 .04.87a1.99 1.99 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2zm5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19c-.24 0-.47.042-.683.12L1.5 2.98a1 1 0 0 1 1-.98h3.672z"
+            />
+            <path
+              d="M13.5 10a.5.5 0 0 1 .5.5V12h1.5a.5.5 0 1 1 0 1H14v1.5a.5.5 0 1 1-1 0V13h-1.5a.5.5 0 0 1 0-1H13v-1.5a.5.5 0 0 1 .5-.5z"
+            />
+          </svg>
+          <span>Manage Documents</span>
+        </li>
+        <li routerLink="./manage-requests" routerLinkActive="active">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-send-plus-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"
+            />
+            <path
+              d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z"
+            />
+          </svg>
+          <span>Manage Requests</span>
+        </li>
 
-  <div class="container" style="height: calc(100vh - 81px)">
-    <div class="row">
-      <div class="col-3">
-        <div class="side-bar">
-          <div class="side-bar-content">
-            <ul class="side-nav">
-              <li routerLink="./dashboard" routerLinkActive="active">
-                Dashboard
-              </li>
-              <li routerLink="./manage-documents" routerLinkActive="active">
-                Manage Documents
-              </li>
+        <li routerLink="./manage-users" routerLinkActive="active">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-people-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"
+            />
+            <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
+          </svg>
+          <span>Manage Users</span>
+        </li>
 
-              <li routerLink="./manage-users" routerLinkActive="active">
-                Manage Users
-              </li>
-              <li routerLink="./activity-logs" routerLinkActive="active">
-                User Activity Log
-              </li>
-
-              <li>Service and Utilization</li>
-
-              <li>Physical Set-up and Facilities</li>
-              <li>Financial Support</li>
-
-              <li>Linkages</li>
-              <li>ISO Documents</li>
-
-              <li>Other Documents</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="col-9" style="min-height: calc(100vh - 81px)">
-        <router-outlet></router-outlet>
+        <li routerLink="./activity-logs" routerLinkActive="active">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-activity"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z"
+            />
+          </svg>
+          <span>User Activity Log</span>
+        </li>
+      </ul>
+      <div class="closer">
+        <button class="no-style" (click)="collapsed()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="white"
+            [ngClass]="
+              isCollapsed
+                ? 'bi bi-chevron-double-left collapsed'
+                : 'bi bi-chevron-double-left'
+            "
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   </div>
-</div>
 
-<!-- <div class="button-scroll" (scroll)="onscroll()">
-  <button mat-mini-fab type="button" class="fab" (click)="toTop()">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      fill="currentColor"
-      class="bi bi-arrow-up-short"
-      viewBox="0 0 16 16"
-    >
-      <path
-        fill-rule="evenodd"
-        d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"
-      />
-    </svg>
-  </button>
-</div> -->
+  <div [ngClass]="isCollapsed ? 'page-wrapper collapsed' : 'page-wrapper '">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<ngx-spinner
+  bdColor="rgb(255,255,255,0.8)"
+  size="small"
+  color="#fff"
+  type="ball-scale-multiple"
+  template="<img src='https://sustainability.batstate-u.edu.ph/wp-content/uploads/2021/09/batstateu-redspartan-e1602756308679.png' />"
+>
+</ngx-spinner>

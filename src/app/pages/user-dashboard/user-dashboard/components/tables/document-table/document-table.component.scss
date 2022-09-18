@@ -69,6 +69,15 @@ margin-left: 10px;
 .td{
   padding-block: 20px;
   text-transform: capitalize;
+  
+
+
+}
+.td+.td{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 80px;
 }
 
 small{
@@ -78,4 +87,26 @@ small{
   display: flex;
   flex-direction: row;
   gap: 5px;
+}
+td.mat-cell{
+  border: none;
+  font-size: .95em;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+ tr.mat-row:nth-child(even){
+  background-color: #FCF4F4;
+}
+      
+tr.mat-row:nth-child(odd){
+  background-color: #fff;
+}
+th.mat-header-cell{
+  background-color: #FCF4F4;
+  text-transform: capitalize;
+  text-align: center;
+  font-weight: 700;
+
+
 }

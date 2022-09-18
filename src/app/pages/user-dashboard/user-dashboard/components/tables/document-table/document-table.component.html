@@ -32,7 +32,12 @@
         <span>Upload Document</span>
       </button>
       <form action="">
-        <input type="text" class="form-control" placeholder="Search" />
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search"
+          (keyup)="searchFilter($event)"
+        />
       </form>
     </div>
     <button
@@ -68,7 +73,9 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>File Name</th>
-      <td mat-cell *matCellDef="let row" class="td">{{ row.fileName }}</td>
+      <td mat-cell *matCellDef="let row" class="td">
+        {{ row.fileName.split("." + row.fileType).join("") }}
+      </td>
     </ng-container>
     <!-- <ng-container matColumnDef="file">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>File</th>
@@ -114,6 +121,7 @@
             class="action-btn download-btn"
             mat-mini-fab
             (click)="link.click()"
+            *ngIf="row.canAccess.includes(userId)"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -131,7 +139,7 @@
               />
             </svg>
           </button>
-          <button
+          <!-- <button
             type="button"
             class="action-btn edit-btn"
             data-bs-toggle="modal"
@@ -175,7 +183,7 @@
                 d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"
               />
             </svg>
-          </button>
+          </button> -->
         </div>
         <div
           class="modal fade"
@@ -283,6 +291,9 @@
               "
               >Please upload a file.</small
             >
+            <small *ngIf="!isFileValid"
+              >Invalid file. Must be (docx, xlsx, pdf, word)</small
+            >
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">Description:</label>
@@ -311,9 +322,9 @@
               formControlName="classification"
             >
               <option selected>Classification:</option>
-              <option value="other documents">Other Documents</option>
-              <option value="manuscripts">Manuscripts</option>
-              <option value="3">Three</option>
+              <option *ngFor="let c of classificationContent" value="{{ c }}">
+                {{ c }}
+              </option>
             </select>
             <small
               *ngIf="
@@ -333,9 +344,9 @@
               formControlName="fileType"
             >
               <option selected>Type:</option>
-              <option value="excel">Excel</option>
+              <option value="xlsx">Excel</option>
               <option value="pdf">Pdf</option>
-              <option value="others">Others</option>
+              <option value="docx">Word/Docx</option>
             </select>
             <small
               *ngIf="
@@ -345,27 +356,7 @@
               >Please select file type.</small
             >
           </div>
-          <div class="mb-3">
-            <label for="formFile" class="form-label">User:</label>
-            <select
-              class="form-select"
-              aria-label="Default select example"
-              id="select"
-              formControlName="user"
-            >
-              <option selected>User:</option>
-              <option value="Everyone">Everyone</option>
-              <option value="Admin Only">Admin Only</option>
-              <option value="Only Me">Only Me</option>
-            </select>
-            <small
-              *ngIf="
-                formBuild.controls['user'].hasError('required') &&
-                formBuild.controls['user'].touched
-              "
-              >Please select user access.</small
-            >
-          </div>
+
           <div class="mb-3">
             <label for="select" class="form-label">Campus:</label>
 
@@ -376,9 +367,12 @@
               formControlName="campus"
             >
               <option selected>Select Campus:</option>
-              <option value="BatstateU-Alangilan">BatstateU-Alangilan</option>
-              <option value="BatstateU-Mabini">BatstateU-Mabini</option>
-              <option value="BatstateU-Lobo">BatstateU-Lobo</option>
+              <option
+                *ngFor="let campus of campusesList"
+                value="BatstateU-{{ campus }}"
+              >
+                {{ campus }}
+              </option>
             </select>
             <small
               *ngIf="
@@ -388,22 +382,25 @@
               >Please select campus.</small
             >
           </div>
-          <!-- <div class="mb-3">
-            <label for="select" class="form-label">Campus:</label>
-
-            <input type="date" class="form-control" />
-          </div> -->
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button
+          type="button"
+          class="btn btn-secondary text-white"
+          style="background-color: var(--bs-secondary)"
+          data-bs-dismiss="modal"
+          mat-raised-button
+        >
           Close
         </button>
         <button
           type="button"
-          class="btn custom-btn"
+          class="btn custom-btn ms-2"
           (click)="uploadFile($event)"
           data-bs-dismiss="modal"
+          [disabled]="!isFileValid"
+          mat-raised-button
         >
           Save changes
         </button>
@@ -614,11 +611,3 @@
     </div>
   </div>
 </div>
-<ngx-spinner
-  bdColor="rgb(255,255,255,0.6)"
-  size="small"
-  color="#fff"
-  type="ball-scale-multiple"
-  template="<img src='https://sustainability.batstate-u.edu.ph/wp-content/uploads/2021/09/batstateu-redspartan-e1602756308679.png' />"
->
-</ngx-spinner>

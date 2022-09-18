@@ -1,28 +1,51 @@
 import { Component, OnInit } from '@angular/core';
-import { HostListener } from '@angular/core';
+import {
+  Firestore,
+  getDocs,
+  collection,
+  query,
+  where,
+} from '@angular/fire/firestore';
+import { AuthServiceService } from 'src/app/services/auth/auth.service';
 @Component({
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.scss'],
 })
 export class AdminDashboardComponent implements OnInit {
-  scrollUp: boolean = false;
-  @HostListener('window:scroll', ['$event']) onscroll() {
-    console.log('test');
-    if (window.scrollY > 80) {
-      this.scrollUp = true;
-    } else {
-      this.scrollUp = false;
-    }
+  userData?: any;
+  profile: any;
+
+  isCollapsed: boolean = false;
+  collapsed() {
+    this.isCollapsed = this.isCollapsed ? false : true;
   }
-  constructor() {}
+  constructor(
+    private authService: AuthServiceService,
+    private firestore: Firestore
+  ) {}
 
   ngOnInit(): void {}
 
-  toTop() {
-    window.scroll({
-      top: 0,
-      left: 0,
-    });
+  getUserData() {
+    const data = localStorage.getItem('user');
+    if (data) {
+      this.userData = data;
+      const dbinstance = collection(this.firestore, 'users');
+      const q = query(dbinstance, where('uid', '==', this.userData));
+      getDocs(q).then((res: any) => {
+        this.profile = [
+          ...res.docs.map((doc: any) => {
+            return { id: doc.id, ...doc.data() };
+          }),
+        ];
+
+        this.profile = this.profile[0];
+      });
+    } else {
+      this.authService.logout();
+    }
   }
+
+ 
 }

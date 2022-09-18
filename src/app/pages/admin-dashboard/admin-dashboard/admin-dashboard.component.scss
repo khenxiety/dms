@@ -2,19 +2,24 @@
     padding-top: 81px;
     min-height: 100vh;
     background-color: #dae3e7;
-    overflow-y: scroll;
 
 }
 
 .side-bar{
     background-color: #3e4246;
-    height: 100%;
+    min-height: 100%;
     width: 300px;
     position: fixed;
     padding-block: 1.5em;
 
 
     .side-bar-content{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        height: calc(100vh - 115px);
+
 
         .side-nav{
             list-style: none;
@@ -27,8 +32,11 @@
                 color: white;
                 cursor: pointer;
                 &:hover{
-                background-color: #cb2d3c;
+                background-color: #cb2d3d98;
 
+                }
+                svg{
+                    margin-right:1em ;
                 }
 
             
@@ -42,25 +50,59 @@
             }
         }
     }
-}
-.button-scroll{
+    .closer{
+    padding-inline: 1em;
+    position: absolute;
     width: 100%;
-    position: fixed;
     bottom: 0;
-    display:flex ;
+    display: flex;
     justify-content: right;
-    padding: 2em 4em;
 
-    .fab{
-        background-color: var(--bs-secondary);
-        opacity: .6;
 
-        &:hover{
-            opacity: 1;
-
-        }
-
-        
-        
     }
+}
+.side-bar.collapsed{
+    width: 72.36px;
+    .side-bar-content{
+        .side-nav{
+            li{
+                svg{
+                    margin: 0;
+                }
+                span{
+                    // display: none;
+                    position: absolute;
+                    transform: translateX(-400px);
+                }
+            }
+           
+        }
+    }
+    
+    
+}
+.no-style{
+    background: transparent;
+    border: none;
+
+
+    .bi.collapsed{
+        transform: rotate(180deg);
+    }
+}
+.page-wrapper{
+    margin-left: 310px;
+    
+}
+.page-wrapper.collapsed{
+    margin-left: 72.36px;
+}
+
+.link-dark{
+    margin-left: 20px;
+
+   
+}
+.activeClass{
+    background-color:#a42e3a ;
 }

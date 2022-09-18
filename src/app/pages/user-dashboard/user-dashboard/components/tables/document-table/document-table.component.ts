@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   deleteObject,
   getDownloadURL,
@@ -28,7 +34,11 @@ import {
   getDocs,
   deleteDoc,
   doc,
+  query,
+  where,
+  orderBy,
 } from '@angular/fire/firestore';
+import { LogsService } from 'src/app/services/logs/logs.service';
 
 export interface DataItems {
   id: any;
@@ -49,6 +59,11 @@ export interface DataItems {
   styleUrls: ['./document-table.component.scss'],
 })
 export class DocumentTableComponent implements AfterViewInit {
+  @Input() currentUser: string = '';
+  @Input() currentUserCampus: string = '';
+  @Input() currentUserId: string = '';
+  @Input() filterBy: string = '';
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<DataItems>;
@@ -67,6 +82,40 @@ export class DocumentTableComponent implements AfterViewInit {
     'action',
   ];
   public progress: Number = 0;
+  fileRestriction: Array<any> = [
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/pdf',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  ];
+  isFileValid: boolean = true;
+
+  isSharedToMeOpened: boolean = false;
+
+  classificationContent: Array<any> = [
+    'Administration',
+    'Administrative Staff',
+    'Collection Development, Organization and Preservation',
+    'Services and Utilization',
+    'Physical Set-up and Facilities',
+    'Financial Support',
+    'Linkages',
+    'ISO Documents',
+    'Other Documents',
+  ];
+  campusesList: Array<any> = [
+    'Pablo Borbon',
+    'Alangilan',
+    'ARASOF-Nasugbu',
+    'Balayan',
+    'Lemery',
+    'Mabini',
+    'JPLPC-Malvar',
+    'Lipa',
+    'Rosario',
+    'San Juan',
+    'Lobo',
+  ];
+  userId = localStorage.getItem('user');
 
   public formBuild: FormGroup = new FormGroup({});
   public updateForm: FormGroup = new FormGroup({});
@@ -83,37 +132,102 @@ export class DocumentTableComponent implements AfterViewInit {
     private formBuilder: FormBuilder,
     private firestore: Firestore,
     private spinner: NgxSpinnerService,
-    private toast: ToastrService
+    private toast: ToastrService,
+    private logsService: LogsService
   ) {
     this.dataSource = new MatTableDataSource();
   }
 
   ngAfterViewInit(): void {
     this.spinner.show();
-    const dbinstance = collection(this.firestore, 'documents');
-    getDocs(dbinstance)
-      .then((res: any) => {
-        this.dataItems = [
-          ...res.docs.map((doc: any) => {
-            return { ...doc.data(), id: doc.id };
-          }),
-        ];
 
-        this.dataSource.data = this.dataItems as DataItems[];
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.table.dataSource = this.dataSource;
-        console.log(this.dataItems);
+    if (this.filterBy != '') {
+      const dbinstance = collection(this.firestore, 'documents');
+      const q = query(
+        dbinstance,
+        where('classification', '==', this.filterBy),
+        orderBy('dateAdded', 'desc')
+      );
+      this.isSharedToMeOpened = false;
+      this.displayedColumns = [
+        'id',
+        'name',
+        'description',
+        'file type',
+        'date',
+        'campus',
+        'action',
+      ];
+      getDocs(q)
+        .then((res: any) => {
+          this.dataItems = [
+            ...res.docs.map((doc: any) => {
+              return { ...doc.data(), id: doc.id };
+            }),
+          ];
 
-        this.spinner.hide();
-      })
-      .catch((err: any) => {
-        console.log(err.message);
-      });
+          this.dataSource.data = this.dataItems as DataItems[];
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+          this.table.dataSource = this.dataSource;
+          this.spinner.hide();
+        })
+        .catch((err: any) => {
+          console.log(err.message);
+        });
+    } else {
+      this.isSharedToMeOpened = true;
+      this.displayedColumns = [
+        'id',
+        'name',
+        'description',
+        'classification',
+        'file type',
+        'date',
+        'campus',
+        'action',
+      ];
+      const uid = localStorage.getItem('user');
+      if (uid) {
+        const dbinstance = collection(this.firestore, 'documents');
+        const q = query(
+          dbinstance,
+          orderBy('dateAdded', 'desc'),
+          where('canAccess', 'array-contains', uid)
+        );
+        getDocs(q)
+          .then((res: any) => {
+            this.dataItems = [
+              ...res.docs.map((doc: any) => {
+                return { ...doc.data(), id: doc.id };
+              }),
+            ];
+
+            this.dataSource.data = this.dataItems as DataItems[];
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+            this.table.dataSource = this.dataSource;
+            this.spinner.hide();
+          })
+          .catch((err: any) => {
+            console.log(err.message);
+          });
+      } else {
+        console.log('Please Login');
+      }
+    }
   }
 
   ngOnInit(): void {
     this.buildForm();
+  }
+  searchFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
   updateBuildForm(data: any) {
     console.log(data);
@@ -136,6 +250,7 @@ export class DocumentTableComponent implements AfterViewInit {
     this.formBuild = new FormGroup({
       description: new FormControl('', Validators.required),
       file: new FormControl('', Validators.required),
+      fileName: new FormControl('', Validators.required),
 
       fileType: new FormControl('', Validators.required),
 
@@ -147,8 +262,13 @@ export class DocumentTableComponent implements AfterViewInit {
   }
 
   fileChange(event: any) {
-    this.file = event.target.files[0];
-    console.log('File Selected');
+    if (this.fileRestriction.includes(event.target.files[0].type)) {
+      this.file = event.target.files[0];
+      this.isFileValid = true;
+    } else {
+      this.toast.error('Invalid file format');
+      this.isFileValid = false;
+    }
   }
 
   uploadFile(event: any) {
@@ -181,6 +301,7 @@ export class DocumentTableComponent implements AfterViewInit {
         }
       );
     } else {
+      this.spinner.hide();
       this.formBuild.markAllAsTouched();
     }
   }
@@ -196,15 +317,20 @@ export class DocumentTableComponent implements AfterViewInit {
       fileName: snap.name,
       fileType: this.formBuild.value.fileType,
       fileUrl: fileUrl,
-      uid: 'test',
-      user: this.formBuild.value.user,
+      uid: this.currentUser,
+      canAccess: [this.userId],
     };
 
     const dbinstance = collection(this.firestore, 'documents');
     addDoc(dbinstance, data)
       .then((res) => {
-        console.log(data, res);
-        this.toast.success('Document Uploaded!');
+        this.logsService.addLogsService(
+          'Added a Document',
+          this.currentUser,
+          this.currentUserCampus,
+          this.currentUserId
+        );
+        this.toast.success('Document Uploaded!', '', { timeOut: 1000 });
         this.ngAfterViewInit();
         this.progress = 0;
         this.spinner.hide();
@@ -227,6 +353,8 @@ export class DocumentTableComponent implements AfterViewInit {
   }
 
   deleteDocument(data: any) {
+    this.spinner.show();
+
     console.log(data.fileName);
     const storageRef = ref(this.storage, `documents/${data.fileName}`);
 
@@ -234,7 +362,7 @@ export class DocumentTableComponent implements AfterViewInit {
       const dbinstance = doc(this.firestore, 'documents/' + data.id);
       deleteDoc(dbinstance)
         .then((res) => {
-          this.toast.success('Document Deleted!');
+          this.toast.success('Document Deleted!', '', { timeOut: 1000 });
           this.deleteBoolean = false;
           this.spinner.hide();
 

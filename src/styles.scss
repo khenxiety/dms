@@ -54,12 +54,12 @@ html, body { height: 100%; }
   width:100%;
   min-height: 100vh;
   z-index: -2;
-  background:linear-gradient(rgba(255, 255, 255, 0.81),rgba(255, 255, 255, 0.833)), url('/assets/background.jpg');
+  background: url('/assets/background.jpg');
   background-position: center;
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
-  filter:  blur(2px) grayscale(90%);
+  // filter:  blur(2px) grayscale(90%);
 }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; 
   overflow-x: hidden;

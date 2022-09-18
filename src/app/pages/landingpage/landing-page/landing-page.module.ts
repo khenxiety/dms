@@ -12,7 +12,8 @@ import { UserDashboardModule } from '../../user-dashboard/user-dashboard/user-da
 import { AdminDashboardModule } from '../../admin-dashboard/admin-dashboard/admin-dashboard.module';
 import { AdminLoginComponent } from './components/admin-login/admin-login.component';
 import { MatButtonModule } from '@angular/material/button';
-
+import { AuthGuardService as AuthGuard } from 'src/app/services/auth/auth-guard.service';
+import { NgxSpinnerModule } from 'ngx-spinner';
 const routes: Routes = [
   {
     path: '',
@@ -29,6 +30,7 @@ const routes: Routes = [
       {
         path: 'login',
         component: LoginComponent,
+        // canDeactivate: [AuthGuard],
       },
       {
         path: 'administrator',
@@ -66,6 +68,7 @@ const routes: Routes = [
     UserDashboardModule,
     AdminDashboardModule,
     MatButtonModule,
+    NgxSpinnerModule,
   ],
 })
 export class LandingPageModule {}

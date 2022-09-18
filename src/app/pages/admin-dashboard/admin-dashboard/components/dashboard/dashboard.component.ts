@@ -1,11 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
+import {
+  collection,
+  addDoc,
+  Firestore,
+  getDocs,
+  orderBy,
+  query,
+} from '@angular/fire/firestore';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
+  users: any = [];
+  documents: any = [];
+  requests: any = [];
+
   public lineChartData: ChartConfiguration<'line'>['data'] = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
@@ -40,7 +53,98 @@ export class DashboardComponent implements OnInit {
   ];
   public pieChartLegend = true;
   public pieChartPlugins = [];
-  constructor() {}
+  constructor(
+    private spinner: NgxSpinnerService,
+    private firestore: Firestore
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getUsers();
+    this.getDocuments();
+    this.getRequests();
+
+    // const test = [
+    //   {
+    //     cat: '1',
+    //   },
+    //   {
+    //     cat: '1',
+    //   },
+    //   {
+    //     cat: '1',
+    //   },
+    //   {
+    //     cat: '2',
+    //   },
+    //   {
+    //     cat: '3',
+    //   },
+    // ];
+
+    // const arr: any = [];
+
+    // test.forEach((element) => {
+    //   console.log(element.cat);
+    //   if (!arr.includes(element.cat)) {
+    //     arr.push(element.cat);
+    //   }
+    // });
+
+    // console.log(arr);
+  }
+
+  getUsers() {
+    this.spinner.show();
+
+    const dbinstance = collection(this.firestore, 'users');
+    const q = query(dbinstance, orderBy('fullName', 'asc'));
+
+    getDocs(q)
+      .then((res: any) => {
+        this.users = [
+          ...res.docs.map((doc: any) => {
+            return { ...doc.data(), id: doc.id };
+          }),
+        ];
+
+        this.spinner.hide();
+      })
+      .catch((err: any) => {
+        console.log(err.message);
+      });
+  }
+  getDocuments() {
+    const dbinstance = collection(this.firestore, 'documents');
+
+    getDocs(dbinstance)
+      .then((res: any) => {
+        this.documents = [
+          ...res.docs.map((doc: any) => {
+            return { ...doc.data(), id: doc.id };
+          }),
+        ];
+
+        this.spinner.hide();
+      })
+      .catch((err: any) => {
+        console.log(err.message);
+      });
+  }
+  getRequests() {
+    const dbinstance = collection(this.firestore, 'requests');
+
+    getDocs(dbinstance)
+      .then((res: any) => {
+        this.requests = [
+          ...res.docs.map((doc: any) => {
+            return { ...doc.data(), id: doc.id };
+          }),
+        ];
+
+        this.spinner.hide();
+      })
+      .catch((err: any) => {
+        console.log(err.message);
+      });
+  }
 }

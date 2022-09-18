@@ -1,8 +1,9 @@
 <nav class="navbar bg-light fixed-top">
-  <div class="container">
+  <div class="container-fluid">
     <a class="navbar-brand" href="#">
       <img
-        src="assets/logo.png"
+        src="assets/logobsu3.png"
+        height="56px"
         alt="Logo"
         class="d-inline-block align-text-center"
       />
@@ -33,13 +34,13 @@
             />
           </svg>
 
-          <span>User</span>
+          <span>{{ headerName }}</span>
         </a>
         <ul class="dropdown-menu">
           <li><a class="dropdown-item" href="#">Settings</a></li>
           <li><a class="dropdown-item" href="#">Help</a></li>
           <li><hr class="dropdown-divider" /></li>
-          <li><a class="dropdown-item" href="#">Logout</a></li>
+          <li><a class="dropdown-item" (click)="signOut()">Logout</a></li>
         </ul>
       </li>
     </ul>

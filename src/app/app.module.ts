@@ -12,7 +12,11 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { ToastrModule } from 'ngx-toastr';
+import { JwtModule, JwtModuleOptions } from '@auth0/angular-jwt';
 
+export function tokenGetter() {
+  return localStorage.getItem('token');
+}
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -25,6 +29,11 @@ import { ToastrModule } from 'ngx-toastr';
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage()),
     ToastrModule.forRoot(),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+      },
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],
