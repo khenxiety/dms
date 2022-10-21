@@ -25,6 +25,11 @@ export class AuthServiceService {
     return !this.jwtHelper.isTokenExpired(token);
   }
 
+  public isAdminAuthenticated(): boolean {
+    const token = localStorage.getItem('token')!;
+
+    return !this.jwtHelper.isTokenExpired(token);
+  }
   isLoggedIn() {
     const token = localStorage.getItem('token')!;
 
@@ -49,6 +54,38 @@ export class AuthServiceService {
           localStorage.setItem('user', res.user.uid);
           this.toastr.success('Logged-in successfully');
           this.router.navigate(['user-dashboard']);
+          this.spinner.hide();
+        }
+      })
+      .catch((err: any) => {
+        if (err.code == 'auth/invalid-email') {
+          this.toastr.error('Login Error', 'Invalid email');
+        }
+        if (err.code == 'auth/missing-email') {
+          this.toastr.error('Login Error', 'Missing email');
+        }
+        if (err.code == 'auth/internal-error') {
+          this.toastr.error('Login Error', 'Missing password');
+        }
+        if (err.code == 'auth/wrong-password') {
+          this.toastr.error('Login Error', 'Wrong password');
+        }
+        if (err.code == 'auth/user-not-found') {
+          this.toastr.error('Login Error', 'User not found');
+        }
+        this.spinner.hide();
+      });
+  }
+
+  adminLogin(email: any, password: any) {
+    signInWithEmailAndPassword(this.auth, email, password)
+      .then((res: any) => {
+        if (res) {
+          this.userData = this.auth.currentUser;
+          localStorage.setItem('token', res.user.accessToken);
+          localStorage.setItem('user', res.user.uid);
+          this.toastr.success('Logged-in successfully');
+          this.router.navigate(['admin-dashboard']);
           this.spinner.hide();
         }
       })

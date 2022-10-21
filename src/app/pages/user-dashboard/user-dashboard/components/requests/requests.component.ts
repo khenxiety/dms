@@ -9,6 +9,8 @@ import {
   query,
   where,
 } from '@angular/fire/firestore';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import {
   FormGroup,
   FormBuilder,
@@ -29,11 +31,17 @@ export class RequestsComponent implements OnInit {
 
   public formBuild: FormGroup = new FormGroup({});
   userData: any = [];
+
+  documentId: any;
+  selectedData: any;
   constructor(
     private firestore: Firestore,
     private toastr: ToastrService,
-    private spinnr: NgxSpinnerService
-  ) {}
+    private spinnr: NgxSpinnerService,
+    private activatedRoute: ActivatedRoute
+  ) {
+    this.documentId = this.activatedRoute.snapshot.params['id'];
+  }
 
   ngOnInit(): void {
     this.spinnr.show();
@@ -64,8 +72,6 @@ export class RequestsComponent implements OnInit {
           ];
 
           this.spinnr.hide();
-
-          console.log(this.userData[0]);
         })
         .catch((err: any) => {
           console.log(err);
@@ -74,9 +80,10 @@ export class RequestsComponent implements OnInit {
   }
 
   getRequests() {
+    const uid = localStorage.getItem('user');
+
     const dbinstance = collection(this.firestore, 'requests');
 
-    const uid = localStorage.getItem('user');
     if (uid) {
       const q = query(
         dbinstance,
@@ -102,40 +109,71 @@ export class RequestsComponent implements OnInit {
     }
   }
   getFiles() {
+    const uid = localStorage.getItem('user');
+
     const dbinstance = collection(this.firestore, 'documents');
 
-    getDocs(dbinstance)
-      .then((res: any) => {
-        this.documentsList = [
-          ...res.docs.map((doc: any) => {
-            return { id: doc.id, ...doc.data() };
-          }),
-        ];
+    if (this.documentId) {
+      getDocs(dbinstance)
+        .then((res: any) => {
+          this.documentsList = [
+            ...res.docs.map((doc: any) => {
+              return { id: doc.id, ...doc.data() };
+            }),
+          ];
 
-        this.spinnr.hide();
+          this.documentsList = this.documentsList.filter(
+            (item: { id: string }) => item.id == this.documentId
+          );
 
-        console.log(this.documentsList);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
+          console.log(this.documentsList);
+
+          this.spinnr.hide();
+        })
+        .catch((err: any) => {
+          console.log(err);
+        });
+    } else {
+      getDocs(dbinstance)
+        .then((res: any) => {
+          this.documentsList = [
+            ...res.docs.map((doc: any) => {
+              return { id: doc.id, ...doc.data() };
+            }),
+          ];
+
+          this.documentsList = this.documentsList.filter((res: any) => {
+            const user = res.canAccess?.some((el: any) => el.accessId == uid);
+
+            if (!user) return res;
+            return;
+          });
+
+          console.log(this.documentsList);
+          this.spinnr.hide();
+        })
+        .catch((err: any) => {
+          console.log(err);
+        });
+    }
   }
   selectFiles(event: any) {
     console.log(event);
   }
 
   addRequest() {
-    this.spinnr.show();
     // this.faculty = this.faculty.filter(
     //   (item: { sub_type: string }) => item.sub_type == 'permanent'
     // );
-    const uid = localStorage.getItem('user');
-    const date = new Date();
-    const fileName = this.documentsList.filter(
-      (res: { id: string }) => res.id == this.formBuild.value.file
-    );
-    console.log(fileName[0].fileName);
+
     if (this.formBuild.valid) {
+      this.spinnr.show();
+
+      const uid = localStorage.getItem('user');
+      const date = new Date();
+      const fileName = this.documentsList.filter(
+        (res: { id: string }) => res.id == this.formBuild.value.file
+      );
       if (uid) {
         let data = {
           campus: this.userData[0].campus,
@@ -167,6 +205,7 @@ export class RequestsComponent implements OnInit {
     } else {
       this.spinnr.hide();
 
+      this.toastr.error('Pleaase fill up all the fields');
       this.formBuild.markAllAsTouched();
     }
   }

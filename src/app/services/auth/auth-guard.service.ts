@@ -30,6 +30,16 @@ export class AuthGuardService {
     }
     return true;
   }
+  canActivateAdmin(): boolean {
+    if (!this.auth.isAdminAuthenticated()) {
+      this.router.navigate(['/hero']);
+      console.log('not login');
+      this.showError();
+
+      return false;
+    }
+    return true;
+  }
   // canDeactivate(): boolean {
   //   if (this.auth.isAuthenticated()) {
   //     this.router.navigate(['/user-dashboard']);

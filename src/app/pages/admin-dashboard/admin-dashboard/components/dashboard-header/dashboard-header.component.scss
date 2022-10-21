@@ -13,3 +13,12 @@
 nav{
     box-shadow: 0 3px 6px rgba(0,0,0,0.10), 0 3px 6px rgba(0,0,0,0.20);
 }
+.d-none-md{
+    display: inline;
+}
+
+@media (max-width:520px) {
+    .d-none-md{
+display: none;
+    }
+}

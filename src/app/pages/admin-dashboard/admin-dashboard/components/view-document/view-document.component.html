@@ -1,0 +1,265 @@
+<div class="page-wrapper">
+  <app-bread-crumbs [data]="'View Document Details'"></app-bread-crumbs>
+
+  <div class="container-fluid px-0 mt-3">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <!-- Page title -->
+          <div class="button">
+            <button
+              class="btn custom-btn ms-2"
+              mat-raised-button
+              type="button"
+              *ngIf="!editData"
+              (click)="editDocument()"
+            >
+              Edit
+            </button>
+            <button
+              class="btn ms-2"
+              style="color: white; background-color: var(--bs-secondary)"
+              mat-raised-button
+              type="button"
+              *ngIf="editData"
+              (click)="editDocument()"
+            >
+              Cancel
+            </button>
+            <button
+              class="btn custom-btn ms-2"
+              mat-raised-button
+              type="button"
+              *ngIf="editData"
+              (click)="updateDocument(documentData[0].id)"
+            >
+              Save Changes
+            </button>
+          </div>
+          <!-- Form START -->
+          <form class="file-upload" [formGroup]="formBuild">
+            <div class="row mb-5 gx-5">
+              <!-- Contact detail -->
+              <div class="col-xxl-8 mb-5 mb-xxl-0">
+                <div class="bg-secondary-soft px-4 py-5 rounded">
+                  <div class="row g-3">
+                    <h3 class="mb-4 mt-0">
+                      {{
+                        documentData[0]?.fileName
+                          .split("." + documentData[0]?.fileType)
+                          .join("")
+                      }}
+                    </h3>
+                    <!-- First Name -->
+                    <div class="col-md-9">
+                      <label class="form-label"
+                        >File Name
+                        <span *ngIf="editData" class="text-danger"
+                          >*</span
+                        ></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="file"
+                        id="file"
+                        style="text-transform: uppercase"
+                        [disabled]="!editData"
+                        formControlName="file"
+                      />
+                    </div>
+                    <!-- Last name -->
+                    <div class="col-md-3">
+                      <label class="form-label"
+                        >File Type
+                        <span *ngIf="editData" class="text-danger"
+                          >*</span
+                        ></label
+                      >
+                      <!-- <input
+                        type="text"
+                        class="form-control"
+                        placeholder=""
+                        aria-label="Last name"
+                        
+                      /> -->
+                      <select
+                        class="form-select"
+                        aria-label="Default select example"
+                        id="select"
+                        formControlName="fileType"
+                      >
+                        <option value="xlsx">Excel</option>
+                        <option value="pdf">Pdf</option>
+                        <option value="docx">Word/Docx</option>
+                        <option value="ppt">Power Point</option>
+                      </select>
+                    </div>
+                    <!-- Phone number -->
+
+                    <!-- Mobile number -->
+
+                    <!-- Email -->
+
+                    <!-- Skype -->
+                    <div class="col-md-12">
+                      <label class="form-label"
+                        >File Description
+                        <span *ngIf="editData" class="text-danger"
+                          >*</span
+                        ></label
+                      >
+                      <textarea
+                        class="form-control"
+                        id="exampleFormControlTextarea1"
+                        rows="3"
+                        formControlName="description"
+                      ></textarea>
+                    </div>
+                  </div>
+                  <!-- Row END -->
+                </div>
+              </div>
+            </div>
+            <!-- Row END -->
+
+            <div class="row mb-5 gx-5">
+              <div class="col-xxl-6 mb-5 mb-xxl-0">
+                <div class="bg-secondary-soft px-4 py-5 rounded">
+                  <div class="row g-3">
+                    <h4 class="mb-4 mt-0">Document Details</h4>
+
+                    <div class="col-md-6">
+                      <label class="form-label"
+                        >Classification
+                        <span *ngIf="editData" class="text-danger"
+                          >*</span
+                        ></label
+                      >
+                      <select
+                        class="form-select"
+                        aria-label="Default select example"
+                        id="select"
+                        formControlName="classification"
+                      >
+                        <option
+                          *ngFor="let c of classificationContent"
+                          value="{{ c }}"
+                        >
+                          {{ c }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label"
+                        ><i class="fab fa-fw fa-pinterest text-pinterest"></i
+                        >Uploader
+                        <span *ngIf="editData" class="text-danger"
+                          >*</span
+                        ></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder=""
+                        aria-label="Pinterest"
+                        [value]="documentData[0].user"
+                        [disabled]="!editData"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label"
+                        ><i class="fab fa-fw fa-pinterest text-pinterest"></i
+                        >Campus
+                        <span *ngIf="editData" class="text-danger"
+                          >*</span
+                        ></label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder=""
+                        aria-label="Pinterest"
+                        formControlName="campus"
+                        [disabled]="!editData"
+                      />
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label">File Url </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder=""
+                        aria-label="Dribble"
+                        [value]="documentData[0].fileUrl"
+                        [disabled]="true"
+                      />
+                      <a
+                        class="link-primary"
+                        style="cursor: pointer"
+                        (click)="copy(documentData[0].fileUrl)"
+                        >Click to copy link.</a
+                      >
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label"
+                        ><i
+                          class="fab fa-fw fa-linkedin-in text-linkedin me-2"
+                        ></i
+                        >Date Added
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder=""
+                        aria-label="Linkedin"
+                        [value]="documentData[0].dateAdded | date: 'medium'"
+                        [disabled]="true"
+                      />
+                    </div>
+                  </div>
+                  <!-- Row END -->
+                </div>
+              </div>
+
+              <!-- change password -->
+              <div class="col-xxl-6">
+                <div class="bg-secondary-soft px-4 py-5 rounded">
+                  <div class="row g-3">
+                    <h4 class="my-4">Who can access</h4>
+
+                    <!-- Old password -->
+                    <div class="col-md-12">
+                      <div
+                        class="list mb-2"
+                        *ngFor="let access of documentData[0].canAccess"
+                      >
+                        {{ access.accessEmail }}
+
+                        <div class="button">
+                          <button
+                            class="btn btn-danger custom-btn"
+                            type="button"
+                            mat-raised-button
+                            (click)="removeAccess(access, documentData[0].id)"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row END -->
+            <!-- button -->
+          </form>
+          <!-- Form END -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -3,7 +3,7 @@
     <app-bread-crumbs [data]="'Requests'"></app-bread-crumbs>
 
     <div class="row h-100 mt-2">
-      <div class="col-lg-5">
+      <div class="col-lg-5 mb-3">
         <div class="card">
           <div class="card-header"><h2 class="m-0">Request a Document</h2></div>
           <div class="card-body">
@@ -14,6 +14,7 @@
                   formControlName="file"
                   class="form-select"
                   aria-label="Default select example"
+                  [(ngModel)]="documentId"
                 >
                   <option
                     *ngFor="let files of documentsList"
@@ -22,23 +23,6 @@
                     <div>{{ files.fileName }}</div>
                   </option>
                 </select>
-
-                <!-- <input
-                  list="ShowDataList"
-                  class="form-control"
-                  placeholder="Search / Select"
-                  formControlName="file"
-                />
-
-                <datalist id="ShowDataList">
-                  <option
-                    *ngFor="let files of documentsList"
-                    value="{{ files.fileName }}"
-                  >
-                    {{ files.id }}
-                  </option>
-                </datalist> -->
-
                 <small
                   *ngIf="
                     formBuild.controls['file'].hasError('required') &&
@@ -129,6 +113,9 @@
                 </tr>
               </thead>
               <tbody>
+                <tr *ngIf="requestsData.length == 0">
+                  <h5 class="text-center">No Request</h5>
+                </tr>
                 <tr *ngFor="let data of requestsData; let i = index">
                   <th scope="row">{{ i + 1 }}</th>
                   <td>{{ data.fileRequested }}</td>

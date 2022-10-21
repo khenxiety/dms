@@ -9,6 +9,8 @@ import { AuthServiceService } from 'src/app/services/auth/auth.service';
 })
 export class DashboardHeaderComponent implements OnInit {
   @Input() headerName: string = '';
+  @Input() isCollapsed: boolean = false;
+
   constructor(private authService: AuthServiceService) {}
 
   ngOnInit(): void {}

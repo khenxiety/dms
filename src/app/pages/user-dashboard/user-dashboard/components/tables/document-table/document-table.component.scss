@@ -17,6 +17,10 @@ button{
 .edit-btn{
   background-color: var(--bs-success);
 }
+.view-btn{
+  background-color: var(--bs-secondary);
+
+}
 .delete-btn{
   background-color: var(--bs-danger);
 
@@ -39,7 +43,7 @@ button{
     width: 350px;
     height: 100%;
     background-color: #f2f2f3 ;
-    border: none;
+    border-color: #f2f2f3;
     font-size: 15px;
     border-radius: 5px;
   }
@@ -50,9 +54,7 @@ button{
   color: white;
   display: flex;
   align-items: center;
-  span{
-    margin-left: .7em;
-  }
+  
 
 
   &:hover{
@@ -85,8 +87,8 @@ small{
 }
 .button-group{
   display: flex;
-  flex-direction: row;
-  gap: 5px;
+  align-items: center;
+  
 }
 td.mat-cell{
   border: none;
@@ -108,5 +110,14 @@ th.mat-header-cell{
   text-align: center;
   font-weight: 700;
 
+
+}
+
+
+.flex{
+  display: flex;
+  align-items: center;
+
+  max-width: 25em;
 
 }

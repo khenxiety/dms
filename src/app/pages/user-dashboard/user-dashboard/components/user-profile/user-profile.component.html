@@ -4,7 +4,7 @@
 
     <div class="main-body">
       <div class="row gutters-sm">
-        <div class="col-md-4 mb-3 ps-0">
+        <div class="col-md-4 mb-3 px-0 pe-2">
           <div class="card">
             <div class="card-body">
               <div class="d-flex flex-column align-items-center text-center">
@@ -78,10 +78,23 @@
             </div>
           </div>
           <div class="card mt-3">
-            <div class="card-body">test</div>
+            <div class="card-body">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-lg-8 col-md-8">
+                    <h3>My Documents</h3>
+                    <h2>{{ documents.length }}</h2>
+                    <small>Total number of Documents I have access</small>
+                  </div>
+                  <div class="col-lg-3">
+                    <a routerLink="/user-dashboard/documents">View Documents</a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8 px-0">
           <div class="card mb-3 information">
             <div class="card-header"><h2 class="m-0">User Information</h2></div>
             <div class="card-body" *ngIf="!isEditing">
@@ -138,7 +151,16 @@
                 <div class="col-sm-12">
                   <div class="buttons">
                     <button
-                      class="btn custom-btn"
+                      class="btn btn-primary"
+                      style="background-color: var(--bs-primary); color: white"
+                      mat-raised-button
+                      data-bs-toggle="modal"
+                      data-bs-target="#updatePassword"
+                    >
+                      Update Password
+                    </button>
+                    <button
+                      class="btn custom-btn ms-2"
                       mat-raised-button
                       (click)="isEditing = true"
                     >
@@ -372,6 +394,57 @@
           mat-raised-button
           data-bs-dismiss="modal"
           [disabled]="!isFileValid"
+        >
+          Save changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modals -->
+<div
+  class="modal fade"
+  id="updatePassword"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Update Password</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 1.2rem">
+          Are you sure you want to update your password?
+        </p>
+        <small
+          ><strong>Note: </strong>If you didn't find the password reset email,
+          please check you spam emails.</small
+        >
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          mat-raised-button
+          data-bs-dismiss="modal"
+          style="background-color: var(--bs-secondary); color: white"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn custom-btn"
+          mat-raised-button
+          (click)="updatePassword(userData?.email)"
         >
           Save changes
         </button>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import {
   Firestore,
   getDocs,
@@ -17,8 +17,14 @@ export class AdminDashboardComponent implements OnInit {
   profile: any;
 
   isCollapsed: boolean = false;
-  collapsed() {
-    this.isCollapsed = this.isCollapsed ? false : true;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    if (event.target.innerWidth <= 765) {
+      this.isCollapsed = true;
+    } else {
+      this.isCollapsed = false;
+    }
   }
   constructor(
     private authService: AuthServiceService,
@@ -26,7 +32,9 @@ export class AdminDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {}
-
+  collapsed() {
+    this.isCollapsed = this.isCollapsed ? false : true;
+  }
   getUserData() {
     const data = localStorage.getItem('user');
     if (data) {
@@ -46,6 +54,4 @@ export class AdminDashboardComponent implements OnInit {
       this.authService.logout();
     }
   }
-
- 
 }

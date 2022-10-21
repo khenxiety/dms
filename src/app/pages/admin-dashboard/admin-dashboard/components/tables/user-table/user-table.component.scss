@@ -39,7 +39,7 @@ button{
     width: 350px;
     height: 100%;
     background-color: #f2f2f3 ;
-    border: none;
+    border-color: #f2f2f3;
     font-size: 15px;
     border-radius: 5px;
   }
@@ -100,4 +100,8 @@ th.mat-header-cell{
   font-weight: 700;
 
 
+}
+
+.display-flex{
+  display: flex;
 }

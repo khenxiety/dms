@@ -1,5 +1,8 @@
 <div class="dashboard">
-  <app-dashboard-header [headerName]="profile?.username"></app-dashboard-header>
+  <app-dashboard-header
+    [headerName]="profile?.fullName"
+    [isCollapsed]="isCollapsed"
+  ></app-dashboard-header>
   <div [ngClass]="isCollapsed ? 'side-bar collapsed' : 'side-bar'">
     <div class="side-bar-content">
       <ul class="side-nav">

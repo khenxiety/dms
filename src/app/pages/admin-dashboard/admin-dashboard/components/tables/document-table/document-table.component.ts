@@ -1,6 +1,8 @@
 import {
   AfterViewInit,
   Component,
+  ElementRef,
+  HostListener,
   Input,
   OnInit,
   ViewChild,
@@ -39,7 +41,7 @@ import {
 } from '@angular/fire/firestore';
 import { LogsService } from 'src/app/services/logs/logs.service';
 import { SelectionModel } from '@angular/cdk/collections';
-
+import { Router } from '@angular/router';
 export interface DataItems {
   id: any;
   name: any;
@@ -68,6 +70,7 @@ export class DocumentTableComponent implements AfterViewInit {
   @ViewChild(MatTable) table!: MatTable<DataItems>;
   dataSource: MatTableDataSource<DataItems>;
   selection = new SelectionModel<DataItems>(true, []);
+  isSelected: boolean = false;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = [
@@ -76,9 +79,9 @@ export class DocumentTableComponent implements AfterViewInit {
     'name',
     'description',
     'classification',
-    'file type',
-    'user',
-    'date',
+    // 'file type',
+    // 'user',
+    // 'date',
     'campus',
     'action',
   ];
@@ -87,6 +90,7 @@ export class DocumentTableComponent implements AfterViewInit {
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/pdf',
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   ];
   isFileValid: boolean = true;
 
@@ -122,7 +126,15 @@ export class DocumentTableComponent implements AfterViewInit {
 
   dataItems: any;
   deleteBoolean: boolean = false;
+  collapsed: boolean = false;
 
+  selectedDocument: Array<any> = [];
+  @ViewChild('closeUploadModal', { static: false }) closeUploadModal:
+    | ElementRef
+    | undefined;
+  @ViewChild('deleteCloseModalAdmin', { static: false }) deleteCloseModalAdmin:
+    | ElementRef
+    | undefined;
   constructor(
     private fileupload: UploadServiceService,
     private toastr: MatSnackBar,
@@ -131,11 +143,42 @@ export class DocumentTableComponent implements AfterViewInit {
     private firestore: Firestore,
     private spinner: NgxSpinnerService,
     private toast: ToastrService,
-    private logsService: LogsService
+    private logsService: LogsService,
+    private router: Router
   ) {
     this.dataSource = new MatTableDataSource();
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    if (event.target.innerWidth <= 1100) {
+      this.displayedColumns = [
+        'select',
+        // 'id',
+        'name',
+        // 'description',
+        'classification',
+        // 'file type',
+        // 'user',
+        // 'date',
+        // 'campus',
+        'action',
+      ];
+    } else {
+      this.displayedColumns = [
+        'select',
+        'id',
+        'name',
+        'description',
+        'classification',
+        // 'file type',
+        // 'user',
+        // 'date',
+        'campus',
+        'action',
+      ];
+    }
+  }
   ngAfterViewInit(): void {
     this.spinner.show();
     const dbinstance = collection(this.firestore, 'documents');
@@ -183,7 +226,7 @@ export class DocumentTableComponent implements AfterViewInit {
         Validators.required
       ),
 
-      user: new FormControl(data.user || '', Validators.required),
+      // user: new FormControl(data.user || '', Validators.required),
       campus: new FormControl(data.campus || '', Validators.required),
     });
   }
@@ -196,12 +239,12 @@ export class DocumentTableComponent implements AfterViewInit {
 
       classification: new FormControl('', Validators.required),
 
-      user: new FormControl('', Validators.required),
       campus: new FormControl('', Validators.required),
     });
   }
 
   fileChange(event: any) {
+    console.log(event.target.files[0].type);
     if (this.fileRestriction.includes(event.target.files[0].type)) {
       this.file = event.target.files[0];
       this.isFileValid = true;
@@ -211,6 +254,9 @@ export class DocumentTableComponent implements AfterViewInit {
     }
   }
 
+  selectToDelete(row: any) {
+    this.selectedDocument = row;
+  }
   uploadFile(event: any) {
     this.spinner.show();
 
@@ -241,6 +287,9 @@ export class DocumentTableComponent implements AfterViewInit {
         }
       );
     } else {
+      this.toast.error('Please fill up all the fields');
+      this.spinner.hide();
+
       this.formBuild.markAllAsTouched();
     }
   }
@@ -256,9 +305,9 @@ export class DocumentTableComponent implements AfterViewInit {
       fileName: snap.name,
       fileType: this.formBuild.value.fileType,
       fileUrl: fileUrl,
-      uid: 'test',
-      user: this.formBuild.value.user,
-      canAccess: ['Admin Only'],
+      uid: 'Admin',
+      user: 'Admin',
+      canAccess: [],
     };
 
     const dbinstance = collection(this.firestore, 'documents');
@@ -271,6 +320,8 @@ export class DocumentTableComponent implements AfterViewInit {
           'Admin'
         );
         this.toast.success('Document Uploaded!', '', { timeOut: 1000 });
+        this.closeUploadModal!.nativeElement.click();
+
         this.ngAfterViewInit();
         this.progress = 0;
         this.spinner.hide();
@@ -296,7 +347,7 @@ export class DocumentTableComponent implements AfterViewInit {
     this.spinner.show();
 
     console.log(data);
-    const storageRef = ref(this.storage, `documents/${data.fileName}`);
+    const storageRef = ref(this.storage, `documents/${data.file}`);
 
     deleteObject(storageRef).then(() => {
       const dbinstance = doc(this.firestore, 'documents/' + data.id);
@@ -306,6 +357,8 @@ export class DocumentTableComponent implements AfterViewInit {
           this.toast.success('Document Deleted!', '', { timeOut: 1000 });
           this.deleteBoolean = false;
           this.spinner.hide();
+
+          this.deleteCloseModalAdmin!.nativeElement.click();
 
           this.ngAfterViewInit();
         })
@@ -328,9 +381,65 @@ export class DocumentTableComponent implements AfterViewInit {
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.data.forEach((row) => this.selection.select(row.id));
+    if (this.selection.selected.length != 0) {
+      this.isSelected = true;
+      console.log('valid');
+    } else {
+      this.isSelected = false;
+
+      console.log('not');
+    }
     console.log(this.selection.selected);
   }
   singleSelection() {
+    if (this.selection.selected.length != 0) {
+      console.log('valid');
+      this.isSelected = true;
+    } else {
+      console.log('not');
+      this.isSelected = false;
+    }
     console.log(this.selection.selected);
+  }
+
+  deleteDocuments() {
+    const ids = this.selection.selected;
+    this.spinner.show();
+
+    ids.forEach((element) => {
+      console.log(element);
+
+      const filenames = this.dataItems.filter(
+        (res: { id: any }) => res.id == element
+      );
+      console.log(filenames[0].fileName);
+      const storageRef = ref(
+        this.storage,
+        `documents/${filenames[0].fileName}`
+      );
+
+      deleteObject(storageRef).then(() => {
+        const dbinstance = doc(this.firestore, 'documents/' + element);
+
+        deleteDoc(dbinstance)
+          .then((res) => {
+            this.toast.success('Document Deleted!', '', { timeOut: 1000 });
+            this.deleteBoolean = false;
+
+            this.ngAfterViewInit();
+          })
+          .catch((err) => {
+            console.log(err);
+            this.toast.success('Document not deleted!');
+          });
+      });
+    });
+  }
+
+  goToFile(id: any) {
+    this.router.navigate([
+      '/admin-dashboard/manage-documents/view-document',
+      id,
+    ]);
   }
 }

@@ -4,64 +4,97 @@
     mode="determinate"
     value="{{ progress }}"
   ></mat-progress-bar>
-  <div class="action">
-    <div class="action">
+  <div class="row my-3">
+    <div class="col-md-8 col-sm-10">
+      <div class="row">
+        <div class="col-md-3 mb-3">
+          <button
+            class="custom-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#uploadModal"
+            mat-raised-button
+          >
+            <!-- <button class="custom-btn" mat-raised-button (click)="inputField.click()"> -->
+            <input
+              type="file"
+              #inputField
+              hidden
+              (change)="uploadFile($event)"
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-upload"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"
+              />
+              <path
+                d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"
+              />
+            </svg>
+            <span *ngIf="!collapsed" class="ms-2">Upload Document</span>
+            <span *ngIf="collapsed" class="ms-2">Upload</span>
+          </button>
+        </div>
+        <div class="col-md-9 col-sm-12">
+          <form action="">
+            <div class="row">
+              <div class="col-md-8 col-sm-8 col-xs-8 mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Search"
+                  (keyup)="searchFilter($event)"
+                />
+              </div>
+              <div class="col-md-4 col-sm-4 col-xs-4 mb-3">
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
+                  (change)="searchFilter($event)"
+                >
+                  <option selected value="">Filter:</option>
+                  <option
+                    *ngFor="let c of classificationContent"
+                    value="{{ c }}"
+                  >
+                    {{ c }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-2">
       <button
-        class="custom-btn"
-        data-bs-toggle="modal"
-        data-bs-target="#uploadModal"
-        mat-raised-button
+        mat-mini-fab
+        (click)="ngAfterViewInit()"
+        style="background: none; border-radius: 50%; float: right"
       >
-        <!-- <button class="custom-btn" mat-raised-button (click)="inputField.click()"> -->
-        <input type="file" #inputField hidden (change)="uploadFile($event)" />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
           height="16"
-          fill="currentColor"
-          class="bi bi-upload"
+          fill="black"
+          class="bi bi-arrow-repeat"
           viewBox="0 0 16 16"
         >
           <path
-            d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"
+            d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"
           />
           <path
-            d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"
+            fill-rule="evenodd"
+            d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
           />
         </svg>
-        <span>Upload Document</span>
       </button>
-      <form action="">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search"
-          (keyup)="searchFilter($event)"
-        />
-      </form>
     </div>
-    <button
-      mat-mini-fab
-      (click)="ngAfterViewInit()"
-      style="background: none; border-radius: 50%"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        fill="black"
-        class="bi bi-arrow-repeat"
-        viewBox="0 0 16 16"
-      >
-        <path
-          d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"
-        />
-        <path
-          fill-rule="evenodd"
-          d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
-        />
-      </svg>
-    </button>
   </div>
   <table mat-table class="full-width-table" matSort aria-label="Elements">
     <!-- Id Column -->
@@ -114,37 +147,33 @@
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
       <td mat-cell *matCellDef="let row" class="action-cell">
+        <a href="{{ row.fileUrl }}" #link hidden target="_blank"></a>
+
         <div class="button-group">
-          <a href="{{ row.fileUrl }}" #link hidden target="_blank"></a>
           <button
             type="button"
-            class="action-btn download-btn"
+            class="action-btn view-btn me-2"
+            (click)="goToFile(row.id)"
             mat-mini-fab
-            (click)="link.click()"
-            *ngIf="row.canAccess.includes(userId)"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
               height="16"
               fill="currentColor"
-              class="bi bi-download"
+              class="bi bi-three-dots"
               viewBox="0 0 16 16"
             >
               <path
-                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"
-              />
-              <path
-                d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"
+                d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
               />
             </svg>
           </button>
-          <!-- <button
+          <button
             type="button"
-            class="action-btn edit-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#updateModal"
-            (click)="updateBuildForm(row)"
+            class="action-btn edit-btn me-2"
+            (click)="goToFile(row.id)"
+            *ngIf="row.user == profile[0].idNumber && !collapsed"
             mat-mini-fab
           >
             <svg
@@ -164,12 +193,41 @@
               />
             </svg>
           </button>
+          <div class="download" *ngFor="let access of row.canAccess">
+            <button
+              type="button"
+              class="action-btn download-btn me-2"
+              mat-mini-fab
+              (click)="link.click()"
+              *ngIf="access.accessId == userId"
+              data-bs-toggle="tooltip"
+              data-bs-title="Default tooltip"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-download"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"
+                />
+                <path
+                  d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"
+                />
+              </svg>
+            </button>
+          </div>
           <button
             type="button"
             class="action-btn delete-btn"
             mat-mini-fab
+            (click)="selectToDelete(row)"
             data-bs-toggle="modal"
-            data-bs-target="#deleteModal"
+            data-bs-target="#deleteDocumentModal"
+            *ngIf="row.user == profile[0].idNumber && !collapsed"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -183,50 +241,7 @@
                 d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"
               />
             </svg>
-          </button> -->
-        </div>
-        <div
-          class="modal fade"
-          id="deleteModal"
-          tabindex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">
-                  Delete Document
-                </h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                Are you sure you want to delete this document?
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  data-bs-dismiss="modal"
-                  (click)="deleteDocument(row)"
-                >
-                  Delete document
-                </button>
-              </div>
-            </div>
-          </div>
+          </button>
         </div>
       </td>
     </ng-container>
@@ -235,9 +250,13 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 
+  <div class="text-center" *ngIf="dataSource.data.length == 0">
+    <h3>No records found.</h3>
+  </div>
+
   <mat-paginator
     #paginator
-    [length]="dataSource?.data?.length"
+    [length]="dataSource.data.length"
     [pageIndex]="0"
     [pageSize]="5"
     [pageSizeOptions]="[5, 10, 20]"
@@ -245,6 +264,7 @@
   >
   </mat-paginator>
 </div>
+<!-- upload/create -->
 <div
   class="modal fade"
   id="uploadModal"
@@ -257,6 +277,7 @@
       <div class="modal-header">
         <h1 class="modal-title" id="exampleModalLabel">Upload Document</h1>
         <button
+          #closeModal
           type="button"
           class="btn-close"
           data-bs-dismiss="modal"
@@ -292,7 +313,7 @@
               >Please upload a file.</small
             >
             <small *ngIf="!isFileValid"
-              >Invalid file. Must be (docx, xlsx, pdf, word)</small
+              >Invalid file. Must be (docx, xlsx, pdf, word or ppt)</small
             >
           </div>
           <div class="mb-3">
@@ -343,10 +364,10 @@
               id="select"
               formControlName="fileType"
             >
-              <option selected>Type:</option>
               <option value="xlsx">Excel</option>
               <option value="pdf">Pdf</option>
               <option value="docx">Word/Docx</option>
+              <option value="ppt">Power Point</option>
             </select>
             <small
               *ngIf="
@@ -398,7 +419,6 @@
           type="button"
           class="btn custom-btn ms-2"
           (click)="uploadFile($event)"
-          data-bs-dismiss="modal"
           [disabled]="!isFileValid"
           mat-raised-button
         >
@@ -515,7 +535,7 @@
               >Please select file type.</small
             >
           </div>
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label for="formFile" class="form-label">User:</label>
             <select
               class="form-select"
@@ -535,7 +555,7 @@
               "
               >Please select user access.</small
             >
-          </div>
+          </div> -->
           <div class="mb-3">
             <label for="select" class="form-label">Campus:</label>
 
@@ -604,6 +624,43 @@
           type="button"
           class="btn btn-primary"
           (click)="deleteBoolean = true"
+        >
+          Save changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- delete modal -->
+<div
+  class="modal fade"
+  id="deleteDocumentModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">...</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          (click)="deleteDocument(selectedDocument)"
         >
           Save changes
         </button>

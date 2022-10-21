@@ -26,36 +26,41 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ManageRequestsComponent } from './components/manage-requests/manage-requests.component';
 import { RequestsTableComponent } from './components/tables/requests-table/requests-table.component';
+import { ViewDocumentComponent } from './components/view-document/view-document.component';
 const routes: Routes = [
   {
     path: 'admin-dashboard',
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     component: AdminDashboardComponent,
     children: [
       {
         path: 'dashboard',
         component: DashboardComponent,
-        // canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'manage-documents',
         component: DocumentsComponent,
-        // canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'manage-requests',
         component: ManageRequestsComponent,
-        // canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'manage-users',
         component: ManageUsersComponent,
-        // canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'activity-logs',
         component: LogsComponent,
-        // canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'manage-documents/view-document/:id',
+        component: ViewDocumentComponent,
       },
       {
         path: '',
@@ -86,6 +91,7 @@ const routes: Routes = [
     LogsComponent,
     ManageRequestsComponent,
     RequestsTableComponent,
+    ViewDocumentComponent,
   ],
   imports: [
     CommonModule,

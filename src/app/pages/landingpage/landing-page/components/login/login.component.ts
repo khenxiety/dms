@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
     private authService: AuthServiceService,
     private spinner: NgxSpinnerService
   ) {
-    this.authService.isLoggedIn();
+    // this.authService.isLoggedIn();
   }
 
   ngOnInit(): void {}

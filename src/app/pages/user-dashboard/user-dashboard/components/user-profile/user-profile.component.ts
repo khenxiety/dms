@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
+import { Auth, sendPasswordResetEmail } from '@angular/fire/auth';
 import {
   collection,
   doc,
@@ -42,6 +42,8 @@ export class UserProfileComponent implements OnInit {
 
   isEditing: boolean = false;
 
+  documents: any = [];
+
   constructor(
     private firestore: Firestore,
     private auth: Auth,
@@ -53,9 +55,9 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.spinnr.show();
+    this.getData();
 
     this.getRequests();
-    this.getData();
   }
   fileChange(event: any) {
     if (this.fileRestriction.includes(event.target.files[0].type)) {
@@ -96,6 +98,7 @@ export class UserProfileComponent implements OnInit {
           ];
           this.userData = this.userData[0];
           this.buildForm(this.userData);
+          this.getDocumentsIhaveAccess(this.userData);
 
           this.spinnr.hide();
         })
@@ -106,7 +109,38 @@ export class UserProfileComponent implements OnInit {
       console.log('Please login');
     }
   }
+  getDocumentsIhaveAccess(data: any) {
+    const uid = localStorage.getItem('user');
+    console.log(this.userData);
+    if (uid) {
+      const dbinstance = collection(this.firestore, 'documents');
+      const q = query(
+        dbinstance,
+        orderBy('dateAdded', 'desc'),
+        where('canAccess', 'array-contains', {
+          accessId: uid,
+          accessEmail: data.email,
+        })
+      );
+      getDocs(q)
+        .then((res: any) => {
+          this.documents = [
+            ...res.docs.map((doc: any) => {
+              return { ...doc.data(), id: doc.id };
+            }),
+          ];
+          console.log(this.documents);
 
+          this.spinnr.hide();
+        })
+        .catch((err: any) => {
+          console.log(err.message);
+          this.spinnr.hide();
+        });
+    } else {
+      console.log('Please Login');
+    }
+  }
   getRequests() {
     const dbinstance = collection(this.firestore, 'requests');
     const uid = localStorage.getItem('user');
@@ -168,7 +202,6 @@ export class UserProfileComponent implements OnInit {
   createDocument(url: any, data: any) {
     let user = {
       displayPicture: url,
-      
     };
     const updatedoc = doc(this.firestore, 'users', this.userData.id);
     updateDoc(updatedoc, user)
@@ -225,5 +258,16 @@ export class UserProfileComponent implements OnInit {
       this.toastr.error('Please fill up the fields');
       this.formBuild.markAllAsTouched();
     }
+  }
+
+  updatePassword(email: any) {
+    sendPasswordResetEmail(this.auth, email)
+      .then((res: any) => {
+        this.toastr.success('Password Reset Email Sent');
+      })
+      .catch((err: any) => {
+        console.log(err);
+        this.toastr.error('Sending Password Reset Email failed', err.message);
+      });
   }
 }

@@ -40,8 +40,10 @@
           <input
             type="email"
             class="form-control"
-            id="exampleFormControlInput1"
+            id="email"
+            name="email"
             placeholder="Email"
+            [(ngModel)]="email"
           />
         </div>
         <div class="mb-3">
@@ -50,7 +52,10 @@
             type="password"
             class="form-control"
             id="password"
+            name="password"
+            #input
             placeholder="Password"
+            [(ngModel)]="password"
           />
         </div>
         <div class="mb-3">
@@ -59,7 +64,7 @@
               class="form-check-input"
               type="checkbox"
               value=""
-              id="flexCheckDefault"
+              (click)="showPassword(input)"
             />
             <label class="form-check-label" for="flexCheckDefault">
               Show Password

@@ -1,13 +1,15 @@
 <nav class="navbar bg-light fixed-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="/user-dashboard">
       <img
         src="assets/logobsu3.png"
         height="56px"
         alt="Logo"
         class="d-inline-block align-text-center"
       />
-      <span style="margin-left: 10px">BATANGAS STATE UNIVERSITY</span>
+      <span style="margin-left: 10px" *ngIf="!isCollapsed"
+        >BATANGAS STATE UNIVERSITY</span
+      >
     </a>
     <ul class="nav">
       <li class="nav-item dropdown text-black">
@@ -21,8 +23,8 @@
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
+            width="24"
+            height="24"
             fill="currentColor"
             class="bi bi-person-circle me-2"
             viewBox="0 0 16 16"
@@ -34,7 +36,7 @@
             />
           </svg>
 
-          <span>{{ headerName }}</span>
+          <span *ngIf="!isCollapsed">{{ headerName }}</span>
         </a>
         <ul class="dropdown-menu">
           <li><a class="dropdown-item" href="#">Settings</a></li>

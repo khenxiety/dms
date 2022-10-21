@@ -1,4 +1,9 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  HostListener,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
@@ -19,6 +24,7 @@ import {
   updateDoc,
   doc,
   arrayUnion,
+  arrayRemove,
 } from '@angular/fire/firestore';
 import {
   FormGroup,
@@ -30,7 +36,9 @@ import { NgxSpinnerService, Spinner } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { LogsService } from 'src/app/services/logs/logs.service';
 import { deleteDoc } from 'firebase/firestore';
-
+import { Router } from '@angular/router';
+import { SelectionModel } from '@angular/cdk/collections';
+import { deleteObject } from '@angular/fire/storage';
 export interface DataItems {
   idNumber: any;
   fullName: any;
@@ -53,10 +61,11 @@ export class RequestsTableComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<DataItems>;
   dataSource: MatTableDataSource<DataItems>;
-
+  selection = new SelectionModel<DataItems>(true, []);
+  isSelected: boolean = false;
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
 
-  displayedColumns = ['name', 'file', 'campus', 'status', 'action'];
+  displayedColumns = ['select', 'name', 'file', 'campus', 'status', 'action'];
 
   public usersForm: FormGroup = new FormGroup({});
   public updateForm: FormGroup = new FormGroup({});
@@ -65,17 +74,40 @@ export class RequestsTableComponent implements AfterViewInit {
 
   rightSideBarIsClosed: boolean = true;
   individualData: any = [];
-
+  deleteBoolean: boolean = false;
   constructor(
     private firestore: Firestore,
     private auth: Auth,
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
-    private logsService: LogsService
+    private logsService: LogsService,
+    private router: Router
   ) {
     this.dataSource = new MatTableDataSource();
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    if (event.target.innerWidth <= 1100) {
+      this.displayedColumns = [
+        'select',
+        'name',
+        // 'file',
+        // 'campus',
+        'status',
+        'action',
+      ];
+    } else {
+      this.displayedColumns = [
+        'select',
+        'name',
+        'file',
+        'campus',
+        'status',
+        'action',
+      ];
+    }
+  }
   ngAfterViewInit(): void {
     this.spinner.show();
     this.individualData = [];
@@ -162,8 +194,9 @@ export class RequestsTableComponent implements AfterViewInit {
           'Admin',
           'Admin'
         );
-        this.toastr.success('Information updated successfully');
+        this.toastr.success('Request Approved');
         this.ngAfterViewInit();
+        this.ngOnInit();
 
         // this.formBuild.reset();
       })
@@ -174,7 +207,10 @@ export class RequestsTableComponent implements AfterViewInit {
 
   addAccess(fileId: any, row: any) {
     let data = {
-      canAccess: arrayUnion(row.uid),
+      canAccess: arrayUnion({
+        accessId: row.uid,
+        accessEmail: row.requesterName,
+      }),
     };
     const updatedoc = doc(this.firestore, 'documents', fileId);
     updateDoc(updatedoc, data)
@@ -190,12 +226,14 @@ export class RequestsTableComponent implements AfterViewInit {
           'Admin'
         );
         this.ngAfterViewInit();
+        this.ngOnInit();
 
         // this.formBuild.reset();
       })
       .catch((err: any) => {
         console.log(err.message);
       });
+    this.ngOnInit();
   }
 
   deleteRequest(id: any) {
@@ -208,5 +246,68 @@ export class RequestsTableComponent implements AfterViewInit {
       .catch((err: any) => {
         console.log(err);
       });
+  }
+
+  removeRequest(data: any) {}
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.data.forEach((row: any) =>
+          this.selection.select(row.id)
+        );
+    if (this.selection.selected.length != 0) {
+      this.isSelected = true;
+      console.log('valid');
+    } else {
+      this.isSelected = false;
+
+      console.log('not');
+    }
+    console.log(this.selection.selected);
+  }
+  singleSelection() {
+    if (this.selection.selected.length != 0) {
+      console.log('valid');
+      this.isSelected = true;
+    } else {
+      console.log('not');
+      this.isSelected = false;
+    }
+    console.log(this.selection.selected);
+  }
+
+  deleteRequests() {
+    const ids = this.selection.selected;
+    this.spinner.show();
+
+    ids.forEach((element) => {
+      console.log(element);
+
+      const dbinstance = doc(this.firestore, 'requests/' + element);
+
+      deleteDoc(dbinstance)
+        .then((res) => {
+          this.deleteBoolean = false;
+
+          this.ngAfterViewInit();
+        })
+        .catch((err) => {
+          console.log(err);
+          this.toastr.success('Requests not deleted!');
+        });
+    });
+
+    setTimeout(() => {
+      this.toastr.success('Requests Deleted!', '', { timeOut: 2000 });
+    }, 1000);
   }
 }

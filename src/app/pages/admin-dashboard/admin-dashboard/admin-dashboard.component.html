@@ -1,6 +1,9 @@
 <div class="dashboard">
   <app-dashboard-header></app-dashboard-header>
-  <div [ngClass]="isCollapsed ? 'side-bar collapsed' : 'side-bar'">
+  <div
+    (resize)="onResize($event)"
+    [ngClass]="isCollapsed ? 'side-bar collapsed' : 'side-bar'"
+  >
     <div class="side-bar-content">
       <ul class="side-nav">
         <li routerLink="./dashboard" routerLinkActive="active">

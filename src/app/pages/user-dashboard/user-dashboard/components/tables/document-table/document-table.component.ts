@@ -1,6 +1,8 @@
 import {
   AfterViewInit,
   Component,
+  ElementRef,
+  HostListener,
   Input,
   OnInit,
   ViewChild,
@@ -39,6 +41,7 @@ import {
   orderBy,
 } from '@angular/fire/firestore';
 import { LogsService } from 'src/app/services/logs/logs.service';
+import { Router } from '@angular/router';
 
 export interface DataItems {
   id: any;
@@ -60,6 +63,8 @@ export interface DataItems {
 })
 export class DocumentTableComponent implements AfterViewInit {
   @Input() currentUser: string = '';
+  @Input() currentUserEmail: string = '';
+
   @Input() currentUserCampus: string = '';
   @Input() currentUserId: string = '';
   @Input() filterBy: string = '';
@@ -117,6 +122,9 @@ export class DocumentTableComponent implements AfterViewInit {
   ];
   userId = localStorage.getItem('user');
 
+  @ViewChild('closeModal', { static: false }) closeModal:
+    | ElementRef
+    | undefined;
   public formBuild: FormGroup = new FormGroup({});
   public updateForm: FormGroup = new FormGroup({});
 
@@ -124,7 +132,11 @@ export class DocumentTableComponent implements AfterViewInit {
 
   dataItems: any;
   deleteBoolean: boolean = false;
+  profile: Array<any> = [];
 
+  selectedDocument: Array<any> = [];
+
+  collapsed: boolean = false;
   constructor(
     private fileupload: UploadServiceService,
     private toastr: MatSnackBar,
@@ -133,14 +145,69 @@ export class DocumentTableComponent implements AfterViewInit {
     private firestore: Firestore,
     private spinner: NgxSpinnerService,
     private toast: ToastrService,
-    private logsService: LogsService
+    private logsService: LogsService,
+    private router: Router
   ) {
     this.dataSource = new MatTableDataSource();
   }
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    if (event.target.innerWidth <= 1100) {
+      // this.isCollapsed = true;
+      this.collapsed = true;
+      if (this.filterBy != '') {
+        this.displayedColumns = [
+          'id',
+          'name',
+          // 'description',
+          // 'file type',
+          // 'date',
+          // 'campus',
+          'action',
+        ];
+      } else {
+        this.displayedColumns = [
+          'id',
+          'name',
+          // 'description',
+          'classification',
+          // 'file type',
+          // 'date',
+          // 'campus',
+          'action',
+        ];
+      }
+    } else {
+      this.collapsed = false;
 
+      if (this.filterBy != '') {
+        this.displayedColumns = [
+          'id',
+          'name',
+          'description',
+          'file type',
+          'date',
+          'campus',
+          'action',
+        ];
+      } else {
+        this.displayedColumns = [
+          'id',
+          'name',
+          // 'description',
+          'classification',
+          'file type',
+          // 'date',
+          // 'campus',
+          'action',
+        ];
+      }
+    }
+  }
   ngAfterViewInit(): void {
     this.spinner.show();
 
+    this.getUserData();
     if (this.filterBy != '') {
       const dbinstance = collection(this.firestore, 'documents');
       const q = query(
@@ -158,6 +225,7 @@ export class DocumentTableComponent implements AfterViewInit {
         'campus',
         'action',
       ];
+
       getDocs(q)
         .then((res: any) => {
           this.dataItems = [
@@ -166,6 +234,7 @@ export class DocumentTableComponent implements AfterViewInit {
             }),
           ];
 
+          console.log(this.dataItems);
           this.dataSource.data = this.dataItems as DataItems[];
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
@@ -173,6 +242,7 @@ export class DocumentTableComponent implements AfterViewInit {
           this.spinner.hide();
         })
         .catch((err: any) => {
+          this.spinner.hide();
           console.log(err.message);
         });
     } else {
@@ -180,11 +250,11 @@ export class DocumentTableComponent implements AfterViewInit {
       this.displayedColumns = [
         'id',
         'name',
-        'description',
+        // 'description',
         'classification',
         'file type',
-        'date',
-        'campus',
+        // 'date',
+        // 'campus',
         'action',
       ];
       const uid = localStorage.getItem('user');
@@ -193,7 +263,10 @@ export class DocumentTableComponent implements AfterViewInit {
         const q = query(
           dbinstance,
           orderBy('dateAdded', 'desc'),
-          where('canAccess', 'array-contains', uid)
+          where('canAccess', 'array-contains', {
+            accessId: uid,
+            accessEmail: this.currentUserEmail,
+          })
         );
         getDocs(q)
           .then((res: any) => {
@@ -211,6 +284,7 @@ export class DocumentTableComponent implements AfterViewInit {
           })
           .catch((err: any) => {
             console.log(err.message);
+            this.spinner.hide();
           });
       } else {
         console.log('Please Login');
@@ -221,6 +295,23 @@ export class DocumentTableComponent implements AfterViewInit {
   ngOnInit(): void {
     this.buildForm();
   }
+  getUserData() {
+    if (this.userId) {
+      const dbinstance = collection(this.firestore, 'users');
+      const q = query(dbinstance, where('uid', '==', this.userId));
+      getDocs(q).then((res: any) => {
+        this.profile = [
+          ...res.docs.map((doc: any) => {
+            return { id: doc.id, ...doc.data() };
+          }),
+        ];
+
+        console.log(this.profile);
+      });
+    } else {
+      // this.authService.logout();
+    }
+  }
   searchFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -230,7 +321,7 @@ export class DocumentTableComponent implements AfterViewInit {
     }
   }
   updateBuildForm(data: any) {
-    console.log(data);
+    // console.log(data);
     this.formBuild = new FormGroup({
       description: new FormControl(data.description || '', Validators.required),
       file: new FormControl(data.file || '', Validators.required),
@@ -250,13 +341,12 @@ export class DocumentTableComponent implements AfterViewInit {
     this.formBuild = new FormGroup({
       description: new FormControl('', Validators.required),
       file: new FormControl('', Validators.required),
-      fileName: new FormControl('', Validators.required),
+      // fileName: new FormControl('', Validators.required),
 
       fileType: new FormControl('', Validators.required),
 
       classification: new FormControl('', Validators.required),
 
-      user: new FormControl('', Validators.required),
       campus: new FormControl('', Validators.required),
     });
   }
@@ -302,6 +392,7 @@ export class DocumentTableComponent implements AfterViewInit {
       );
     } else {
       this.spinner.hide();
+      console.log('error');
       this.formBuild.markAllAsTouched();
     }
   }
@@ -318,7 +409,10 @@ export class DocumentTableComponent implements AfterViewInit {
       fileType: this.formBuild.value.fileType,
       fileUrl: fileUrl,
       uid: this.currentUser,
-      canAccess: [this.userId],
+      canAccess: [
+        { accessId: this.userId, accessEmail: this.currentUserEmail },
+      ],
+      user: this.currentUserId,
     };
 
     const dbinstance = collection(this.firestore, 'documents');
@@ -331,6 +425,7 @@ export class DocumentTableComponent implements AfterViewInit {
           this.currentUserId
         );
         this.toast.success('Document Uploaded!', '', { timeOut: 1000 });
+        this.closeModal!.nativeElement.click();
         this.ngAfterViewInit();
         this.progress = 0;
         this.spinner.hide();
@@ -352,10 +447,11 @@ export class DocumentTableComponent implements AfterViewInit {
     });
   }
 
+  selectToDelete(row: any) {
+    this.selectedDocument = row;
+  }
   deleteDocument(data: any) {
     this.spinner.show();
-
-    console.log(data.fileName);
     const storageRef = ref(this.storage, `documents/${data.fileName}`);
 
     deleteObject(storageRef).then(() => {
@@ -373,5 +469,14 @@ export class DocumentTableComponent implements AfterViewInit {
           this.toast.success('Document Uploaded!');
         });
     });
+  }
+
+  requestFile(id: any) {
+    console.log(id);
+    this.router.navigate(['/user-dashboard/request-document', id]);
+  }
+
+  goToFile(id: any) {
+    this.router.navigate(['/user-dashboard/documents/view-document', id]);
   }
 }

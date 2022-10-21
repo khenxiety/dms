@@ -35,16 +35,17 @@ button{
 .action>* + *{
   margin-left: 10px;
 
-  input{
-    width: 350px;
-    height: 100%;
-    background-color: #f2f2f3 ;
-    border: none;
-    font-size: 15px;
-    border-radius: 5px;
-  }
+  
 }
 
+.custom-input{
+  width: 350px;
+  height: 100%;
+  background-color: #f2f2f3 ;
+  border-color: #f2f2f3;
+  font-size: 15px;
+  border-radius: 5px;
+}
 .custom-btn{
   background-color: #cb2d3c;
   color: white;

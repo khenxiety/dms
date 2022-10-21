@@ -47,9 +47,17 @@
 
     <script>
       AOS.init();
-      // document.addEventListener("contextmenu", (event) =>
-      //   event.preventDefault()
-      // );
+    </script>
+
+    <script>
+      window.addEventListener(
+        "contextmenu",
+        function (e) {
+          // do something here...
+          e.preventDefault();
+        },
+        false
+      );
     </script>
   </body>
 </html>

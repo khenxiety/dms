@@ -27,6 +27,7 @@ import { FinancialSupportComponent } from './components/financial-support/financ
 import { LinkagesComponent } from './components/linkages/linkages.component';
 import { IsoComponent } from './components/iso/iso.component';
 import { OtherDocumentsComponent } from './components/other-documents/other-documents.component';
+import { ViewDocumentComponent } from './components/view-document/view-document.component';
 
 const routes: Routes = [
   {
@@ -79,14 +80,25 @@ const routes: Routes = [
         component: IsoComponent,
         canActivate: [AuthGuard],
       },
+
+      {
+        path: 'other-documents',
+        component: OtherDocumentsComponent,
+        canActivate: [AuthGuard],
+      },
       {
         path: 'request-document',
         component: RequestsComponent,
         canActivate: [AuthGuard],
       },
       {
-        path: 'other-documents',
-        component: OtherDocumentsComponent,
+        path: 'request-document/:id',
+        component: RequestsComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'documents/view-document/:id',
+        component: ViewDocumentComponent,
         canActivate: [AuthGuard],
       },
       {
@@ -94,6 +106,7 @@ const routes: Routes = [
         component: UserProfileComponent,
         canActivate: [AuthGuard],
       },
+
       {
         path: '',
         redirectTo: 'documents',
@@ -126,6 +139,7 @@ const routes: Routes = [
     LinkagesComponent,
     IsoComponent,
     OtherDocumentsComponent,
+    ViewDocumentComponent,
   ],
   imports: [
     CommonModule,

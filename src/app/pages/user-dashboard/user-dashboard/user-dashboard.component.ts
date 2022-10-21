@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import {
   Firestore,
   getDocs,
@@ -25,6 +25,14 @@ export class UserDashboardComponent implements OnInit {
     private firestore: Firestore
   ) {}
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    if (event.target.innerWidth <= 768) {
+      this.isCollapsed = true;
+    } else {
+      this.isCollapsed = false;
+    }
+  }
   ngOnInit(): void {
     this.getUserData();
   }

@@ -1,4 +1,9 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  HostListener,
+  ViewChild,
+} from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import {
   collection,
@@ -37,7 +42,7 @@ export class LogsTableComponent implements AfterViewInit {
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['id', 'username', 'campus', 'date', 'activity'];
 
-  dataItems: any;
+  dataItems: any = [];
   constructor(
     private firestore: Firestore,
     private auth: Auth,
@@ -45,6 +50,20 @@ export class LogsTableComponent implements AfterViewInit {
     private toastr: ToastrService
   ) {
     this.dataSource = new MatTableDataSource();
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    if (event.target.innerWidth <= 1100) {
+      this.displayedColumns = [
+        // 'id',
+        'username',
+        // 'campus',
+        'date',
+        'activity',
+      ];
+    } else {
+      this.displayedColumns = ['id', 'username', 'campus', 'date', 'activity'];
+    }
   }
 
   ngAfterViewInit(): void {
@@ -59,7 +78,6 @@ export class LogsTableComponent implements AfterViewInit {
             return { ...doc.data(), id: doc.id };
           }),
         ];
-        console.log(this.dataItems);
 
         this.dataSource.data = this.dataItems as DataItems[];
         this.dataSource.sort = this.sort;

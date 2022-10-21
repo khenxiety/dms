@@ -1,4 +1,9 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  HostListener,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
@@ -80,6 +85,32 @@ export class UserTableComponent implements AfterViewInit {
   ) {
     this.dataSource = new MatTableDataSource();
   }
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    if (event.target.innerWidth <= 1100) {
+      this.displayedColumns = [
+        'id',
+        // 'name',
+        // 'file',
+        'description',
+        // 'classification',
+        'status',
+
+        'action',
+      ];
+    } else {
+      this.displayedColumns = [
+        'id',
+        'name',
+        'file',
+        'description',
+        'classification',
+        'status',
+
+        'action',
+      ];
+    }
+  }
 
   ngAfterViewInit(): void {
     this.spinner.show();
@@ -119,7 +150,7 @@ export class UserTableComponent implements AfterViewInit {
 
       campus: new FormControl('', Validators.required),
 
-      email: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
 
       username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
@@ -167,7 +198,6 @@ export class UserTableComponent implements AfterViewInit {
     }).catch((err) => {
       console.log(err);
     });
-    console.log(createUser.user);
 
     let data = {
       fullName: this.usersForm.value.fullName,
@@ -203,15 +233,12 @@ export class UserTableComponent implements AfterViewInit {
   }
 
   updateStatus(event: any, row: any) {
-    console.log(event);
-
     let data = {
       status: event,
     };
     const updatedoc = doc(this.firestore, 'users', row.id);
     updateDoc(updatedoc, data)
       .then((res: any) => {
-        console.log(res);
         this.spinner.hide();
         this.logsService.addLogsService(
           `Updated status (${row.username},${event})`,
