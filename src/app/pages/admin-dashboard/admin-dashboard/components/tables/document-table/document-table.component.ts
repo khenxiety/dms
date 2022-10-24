@@ -307,6 +307,7 @@ export class DocumentTableComponent implements AfterViewInit {
       fileUrl: fileUrl,
       uid: 'Admin',
       user: 'Admin',
+
       canAccess: [],
     };
 
@@ -324,11 +325,14 @@ export class DocumentTableComponent implements AfterViewInit {
 
         this.ngAfterViewInit();
         this.progress = 0;
+
+        this.formBuild.reset();
         this.spinner.hide();
         // window.location.reload();
       })
       .catch((err) => {
         console.log(err);
+        this.toast.error(err.code);
       });
   }
 
@@ -346,27 +350,49 @@ export class DocumentTableComponent implements AfterViewInit {
   deleteDocument(data: any) {
     this.spinner.show();
 
-    console.log(data);
     const storageRef = ref(this.storage, `documents/${data.file}`);
 
-    deleteObject(storageRef).then(() => {
-      const dbinstance = doc(this.firestore, 'documents/' + data.id);
+    deleteObject(storageRef)
+      .then(() => {
+        const dbinstance = doc(this.firestore, 'documents/' + data.id);
 
-      deleteDoc(dbinstance)
-        .then((res) => {
-          this.toast.success('Document Deleted!', '', { timeOut: 1000 });
-          this.deleteBoolean = false;
-          this.spinner.hide();
+        deleteDoc(dbinstance)
+          .then((res) => {
+            this.toast.success('Document Deleted!', '', { timeOut: 1000 });
+            this.deleteBoolean = false;
+            this.spinner.hide();
 
-          this.deleteCloseModalAdmin!.nativeElement.click();
+            this.deleteCloseModalAdmin!.nativeElement.click();
 
-          this.ngAfterViewInit();
-        })
-        .catch((err) => {
-          console.log(err);
-          this.toast.success('Document not deleted!');
-        });
-    });
+            this.ngAfterViewInit();
+          })
+          .catch((err) => {
+            console.log(err.message);
+            this.spinner.hide();
+            this.toast.error('Document not deleted!', err.message);
+          });
+      })
+      .catch((err: any) => {
+        console.log(err.message);
+        const dbinstance = doc(this.firestore, 'documents/' + data.id);
+        deleteDoc(dbinstance)
+          .then((res) => {
+            this.toast.success('Document Deleted!', '', { timeOut: 1000 });
+            this.deleteBoolean = false;
+            this.spinner.hide();
+
+            this.deleteCloseModalAdmin!.nativeElement.click();
+
+            this.ngAfterViewInit();
+          })
+          .catch((err) => {
+            console.log(err.message);
+            this.spinner.hide();
+            this.toast.error('Document not deleted!', err.code);
+          });
+        this.spinner.hide();
+        this.toast.error('Document not deleted!', err.code);
+      });
   }
 
   isAllSelected() {

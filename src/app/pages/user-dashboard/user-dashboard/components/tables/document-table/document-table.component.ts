@@ -283,7 +283,7 @@ export class DocumentTableComponent implements AfterViewInit {
             this.spinner.hide();
           })
           .catch((err: any) => {
-            console.log(err.message);
+            console.log(err.code);
             this.spinner.hide();
           });
       } else {
@@ -305,8 +305,6 @@ export class DocumentTableComponent implements AfterViewInit {
             return { id: doc.id, ...doc.data() };
           }),
         ];
-
-        console.log(this.profile);
       });
     } else {
       // this.authService.logout();
@@ -398,7 +396,6 @@ export class DocumentTableComponent implements AfterViewInit {
   }
 
   createDocument(fileUrl: any, snap: any) {
-    console.log(snap);
     let data = {
       campus: this.formBuild.value.campus,
       classification: this.formBuild.value.classification,
@@ -412,7 +409,7 @@ export class DocumentTableComponent implements AfterViewInit {
       canAccess: [
         { accessId: this.userId, accessEmail: this.currentUserEmail },
       ],
-      user: this.currentUserId,
+      user: this.currentUser,
     };
 
     const dbinstance = collection(this.firestore, 'documents');
@@ -432,7 +429,9 @@ export class DocumentTableComponent implements AfterViewInit {
         // window.location.reload();
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.code);
+        this.toast.error(err.code);
+        this.spinner.hide();
       });
   }
 
@@ -454,21 +453,44 @@ export class DocumentTableComponent implements AfterViewInit {
     this.spinner.show();
     const storageRef = ref(this.storage, `documents/${data.fileName}`);
 
-    deleteObject(storageRef).then(() => {
-      const dbinstance = doc(this.firestore, 'documents/' + data.id);
-      deleteDoc(dbinstance)
-        .then((res) => {
-          this.toast.success('Document Deleted!', '', { timeOut: 1000 });
-          this.deleteBoolean = false;
-          this.spinner.hide();
+    deleteObject(storageRef)
+      .then(() => {
+        const dbinstance = doc(this.firestore, 'documents/' + data.id);
+        deleteDoc(dbinstance)
+          .then((res) => {
+            this.toast.success('Document Deleted!', '', { timeOut: 1000 });
+            this.deleteBoolean = false;
+            this.spinner.hide();
 
-          this.ngAfterViewInit();
-        })
-        .catch((err) => {
-          console.log(err);
-          this.toast.success('Document Uploaded!');
-        });
-    });
+            this.ngAfterViewInit();
+          })
+          .catch((err) => {
+            console.log(err.code);
+            this.toast.error('Document not deleted!', err.code);
+            this.spinner.hide();
+          });
+      })
+      .catch((err: any) => {
+        console.log(err.code);
+        const dbinstance = doc(this.firestore, 'documents/' + data.id);
+
+        deleteDoc(dbinstance)
+          .then((res) => {
+            this.toast.success('Document Deleted!', '', { timeOut: 1000 });
+            this.deleteBoolean = false;
+            this.spinner.hide();
+
+            this.ngAfterViewInit();
+          })
+          .catch((err) => {
+            console.log(err.code);
+            this.toast.error('Document not deleted!', err.code);
+          });
+        this.ngAfterViewInit();
+
+        this.toast.error('Document deleted!', err.code);
+        this.spinner.hide();
+      });
   }
 
   requestFile(id: any) {

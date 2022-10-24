@@ -57,7 +57,7 @@
                   aria-label="Default select example"
                   (change)="searchFilter($event)"
                 >
-                  <option selected value="">Filter:</option>
+                  <option selected value="">All:</option>
                   <option
                     *ngFor="let c of classificationContent"
                     value="{{ c }}"
@@ -173,7 +173,7 @@
             type="button"
             class="action-btn edit-btn me-2"
             (click)="goToFile(row.id)"
-            *ngIf="row.user == profile[0].idNumber && !collapsed"
+            *ngIf="row.user == profile[0].username && !collapsed"
             mat-mini-fab
           >
             <svg
@@ -227,7 +227,7 @@
             (click)="selectToDelete(row)"
             data-bs-toggle="modal"
             data-bs-target="#deleteDocumentModal"
-            *ngIf="row.user == profile[0].idNumber && !collapsed"
+            *ngIf="row.user == profile[0].username && !collapsed"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -342,7 +342,6 @@
               id="select"
               formControlName="classification"
             >
-              <option selected>Classification:</option>
               <option *ngFor="let c of classificationContent" value="{{ c }}">
                 {{ c }}
               </option>
@@ -387,7 +386,6 @@
               id="select"
               formControlName="campus"
             >
-              <option selected>Select Campus:</option>
               <option
                 *ngFor="let campus of campusesList"
                 value="BatstateU-{{ campus }}"
@@ -424,172 +422,6 @@
         >
           Save changes
         </button>
-      </div>
-    </div>
-  </div>
-</div>
-<div
-  class="modal fade"
-  id="updateModal"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title" id="exampleModalLabel">Update Document</h1>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <form action="" [formGroup]="formBuild">
-          <!-- <div class="mb-3">
-            <label for="filename" class="form-label">Filename:</label>
-            <input
-              type="text"
-              class="form-control"
-              id="filename"
-              placeholder=""
-            />
-          </div> -->
-          <div class="mb-3">
-            <label for="formFile" class="form-label">File upload:</label>
-            <input
-              class="form-control"
-              type="file"
-              id="formFile"
-              (change)="fileChange($event)"
-              formControlName="file"
-            />
-            <small
-              *ngIf="
-                formBuild.controls['file'].hasError('required') &&
-                formBuild.controls['file'].touched
-              "
-              >Please upload a file.</small
-            >
-          </div>
-          <div class="mb-3">
-            <label for="description" class="form-label">Description:</label>
-            <textarea
-              class="form-control"
-              id="description"
-              rows="3"
-              name="description"
-              formControlName="description"
-            ></textarea>
-            <small
-              *ngIf="
-                formBuild.controls['description'].hasError('required') &&
-                formBuild.controls['description'].touched
-              "
-              >Please fill up this form.</small
-            >
-          </div>
-          <div class="mb-3">
-            <label for="select" class="form-label">Classification:</label>
-
-            <select
-              class="form-select"
-              aria-label="Default select example"
-              id="select"
-              formControlName="classification"
-            >
-              <option selected>Classification:</option>
-              <option value="other documents">Other Documents</option>
-              <option value="manuscripts">Manuscripts</option>
-              <option value="3">Three</option>
-            </select>
-            <small
-              *ngIf="
-                formBuild.controls['classification'].hasError('required') &&
-                formBuild.controls['classification'].touched
-              "
-              >Please select a classification.</small
-            >
-          </div>
-          <div class="mb-3">
-            <label for="select" class="form-label">File Type:</label>
-
-            <select
-              class="form-select"
-              aria-label="Default select example"
-              id="select"
-              formControlName="fileType"
-            >
-              <option selected>Type:</option>
-              <option value="excel">Excel</option>
-              <option value="pdf">Pdf</option>
-              <option value="others">Others</option>
-            </select>
-            <small
-              *ngIf="
-                formBuild.controls['fileType'].hasError('required') &&
-                formBuild.controls['fileType'].touched
-              "
-              >Please select file type.</small
-            >
-          </div>
-          <!-- <div class="mb-3">
-            <label for="formFile" class="form-label">User:</label>
-            <select
-              class="form-select"
-              aria-label="Default select example"
-              id="select"
-              formControlName="user"
-            >
-              <option selected>User:</option>
-              <option value="Everyone">Everyone</option>
-              <option value="Admin Only">Admin Only</option>
-              <option value="Only Me">Only Me</option>
-            </select>
-            <small
-              *ngIf="
-                formBuild.controls['user'].hasError('required') &&
-                formBuild.controls['user'].touched
-              "
-              >Please select user access.</small
-            >
-          </div> -->
-          <div class="mb-3">
-            <label for="select" class="form-label">Campus:</label>
-
-            <select
-              class="form-select"
-              aria-label="Default select example"
-              id="select"
-              formControlName="campus"
-            >
-              <option selected>Select Campus:</option>
-              <option value="BatstateU-Alangilan">BatstateU-Alangilan</option>
-              <option value="BatstateU-Mabini">BatstateU-Mabini</option>
-              <option value="BatstateU-Lobo">BatstateU-Lobo</option>
-            </select>
-            <small
-              *ngIf="
-                formBuild.controls['campus'].hasError('required') &&
-                formBuild.controls['campus'].touched
-              "
-              >Please select campus.</small
-            >
-          </div>
-          <!-- <div class="mb-3">
-            <label for="select" class="form-label">Campus:</label>
-
-            <input type="date" class="form-control" />
-          </div> -->
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-        <button type="button" class="btn custom-btn">Save changes</button>
       </div>
     </div>
   </div>
@@ -643,7 +475,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Document</h1>
         <button
           type="button"
           class="btn-close"
@@ -651,7 +483,9 @@
           aria-label="Close"
         ></button>
       </div>
-      <div class="modal-body">...</div>
+      <div class="modal-body">
+        <h4>Are you sure you want to delete this document?</h4>
+      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           Close

@@ -1,5 +1,23 @@
 <div class="page-wrapper">
-  <app-bread-crumbs [data]="'View Document Details'"></app-bread-crumbs>
+  <app-bread-crumbs [data]="documentData[0]?.fileName"></app-bread-crumbs>
+
+  <header class="my-2">
+    <a (click)="back()">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="currentColor"
+        class="bi bi-arrow-left"
+        viewBox="0 0 16 16"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"
+        />
+      </svg>
+    </a>
+  </header>
 
   <div class="container-fluid px-0 mt-3">
     <div class="container-fluid">
@@ -238,7 +256,7 @@
                 class="btn edit-btn ms-2"
                 mat-raised-button
                 type="button"
-                *ngIf="documentData[0]?.user == profile[0].idNumber"
+                *ngIf="documentData[0]?.user == profile[0].username"
                 (click)="editDocument()"
               >
                 Edit
@@ -247,7 +265,7 @@
                 class="btn custom-btn ms-2"
                 mat-raised-button
                 type="button"
-                *ngIf="documentData[0]?.user == profile[0].idNumber"
+                *ngIf="documentData[0]?.user == profile[0].username"
                 (click)="deleteDocument(documentData)"
               >
                 Delete

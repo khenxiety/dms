@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   HostListener,
   ViewChild,
 } from '@angular/core';
@@ -24,6 +25,7 @@ import {
   query,
   updateDoc,
   doc,
+  deleteDoc,
 } from '@angular/fire/firestore';
 import {
   FormGroup,
@@ -76,6 +78,19 @@ export class UserTableComponent implements AfterViewInit {
 
   dataItems: any;
 
+  otherCampus: boolean = false;
+  selectedUser: any = '';
+
+  @ViewChild('userModalClose', { static: false }) userModalClose:
+    | ElementRef
+    | undefined;
+  @ViewChild('userUpdateModalClose', { static: false }) userUpdateModalClose:
+    | ElementRef
+    | undefined;
+
+  @ViewChild('deleteUserModalClose', { static: false }) deleteUserModalClose:
+    | ElementRef
+    | undefined;
   constructor(
     private firestore: Firestore,
     private auth: Auth,
@@ -155,6 +170,17 @@ export class UserTableComponent implements AfterViewInit {
       username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
     });
+    this.updateForm = new FormGroup({
+      idNumber: new FormControl('', Validators.required),
+      fullName: new FormControl('', Validators.required),
+
+      campus: new FormControl('', Validators.required),
+
+      email: new FormControl('', [Validators.required, Validators.email]),
+
+      username: new FormControl('', Validators.required),
+      password: new FormControl('', Validators.required),
+    });
   }
   buildUpdateForm(data: any) {
     this.updateForm = new FormGroup({
@@ -175,13 +201,35 @@ export class UserTableComponent implements AfterViewInit {
     }
   }
 
+  selectCampus() {
+    if (this.usersForm.value.campus == 'others') {
+      this.otherCampus = true;
+    } else {
+      this.otherCampus = false;
+    }
+  }
   addNewUser() {
     if (this.usersForm.valid) {
-      console.log(this.usersForm.value);
       this.signUp();
     } else {
       this.usersForm.markAllAsTouched();
     }
+  }
+
+  selectIndividualId(id: any) {
+    this.selectedUser = id;
+  }
+  selectUserData(data: any) {
+    this.selectIndividualId(data.id);
+    this.updateForm = new FormGroup({
+      idNumber: new FormControl(data.idNumber, Validators.required),
+      fullName: new FormControl(data.fullName, Validators.required),
+      campus: new FormControl(data.campus, Validators.required),
+      email: new FormControl(data.email, Validators.required),
+      username: new FormControl(data.username, Validators.required),
+      status: new FormControl(data.status, Validators.required),
+      uid: new FormControl(data.uid, Validators.required),
+    });
   }
 
   async signUp() {
@@ -196,7 +244,9 @@ export class UserTableComponent implements AfterViewInit {
     updateProfile(createUser.user, {
       displayName: this.usersForm.value.fullName,
     }).catch((err) => {
-      console.log(err);
+      this.toastr.error(err.message);
+      this.ngAfterViewInit();
+      this.spinner.hide();
     });
 
     let data = {
@@ -225,10 +275,15 @@ export class UserTableComponent implements AfterViewInit {
           'admin'
         );
 
+        this.userModalClose?.nativeElement.click();
+        this.usersForm.reset();
+
         this.ngAfterViewInit();
       })
       .catch((err) => {
-        console.log(err);
+        this.toastr.error(err.message);
+        this.ngAfterViewInit();
+        this.spinner.hide();
       });
   }
 
@@ -253,6 +308,71 @@ export class UserTableComponent implements AfterViewInit {
       })
       .catch((err: any) => {
         console.log(err.message);
+        this.toastr.error(err.message);
+        this.ngAfterViewInit();
+        this.spinner.hide();
+      });
+  }
+
+  updateUser() {
+    this.spinner.show();
+    const updateUser = doc(this.firestore, 'users', this.selectedUser);
+    let data = {
+      fullName: this.updateForm.value.fullName,
+      idNumber: this.updateForm.value.idNumber,
+      campus: this.updateForm.value.campus,
+      email: this.updateForm.value.email,
+
+      username: this.updateForm.value.username,
+      status: this.updateForm.value.status,
+      displayPicture: '',
+      address: '',
+      mobile: '',
+    };
+    updateDoc(updateUser, data)
+      .then((res: any) => {
+        this.logsService.addLogsService(
+          `Updated Information (${data.username},${data.idNumber})`,
+          'Admin',
+          'Admin',
+          'Admin'
+        );
+
+        this.selectedUser = '';
+
+        this.userUpdateModalClose?.nativeElement.click();
+        this.updateForm.reset();
+        this.toastr.success('Information updated successfully');
+        this.ngAfterViewInit();
+        this.spinner.hide();
+      })
+      .catch((err: any) => {
+        this.selectedUser = '';
+
+        this.updateForm.reset();
+        this.toastr.error(err.message);
+        this.ngAfterViewInit();
+        this.spinner.hide();
+      });
+  }
+
+  deleteUser(id: any) {
+    const deleteInstance = doc(this.firestore, 'users/' + id);
+    deleteDoc(deleteInstance)
+      .then((res: any) => {
+        this.selectedUser = '';
+
+        this.deleteUserModalClose?.nativeElement.click();
+        this.updateForm.reset();
+        this.toastr.success('User deleted successfully');
+        this.ngAfterViewInit();
+        this.spinner.hide();
+      })
+      .catch((err: any) => {
+        this.selectedUser = '';
+        this.toastr.error(err.message);
+        this.ngAfterViewInit();
+        this.spinner.hide();
       });
   }
 }

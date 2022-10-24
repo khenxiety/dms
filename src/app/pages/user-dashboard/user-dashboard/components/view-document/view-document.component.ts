@@ -22,6 +22,7 @@ import {
   FormControl,
 } from '@angular/forms';
 import { deleteObject, ref, Storage } from '@angular/fire/storage';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-view-document',
   templateUrl: './view-document.component.html',
@@ -55,7 +56,8 @@ export class ViewDocumentComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
     private router: Router,
-    private storage: Storage
+    private storage: Storage,
+    private _location: Location
   ) {
     this.documentId = this.activatedRoute.snapshot.params['id'];
 
@@ -67,6 +69,10 @@ export class ViewDocumentComponent implements OnInit {
     this.isLoading = true;
     this.getData();
     this.getUserData();
+  }
+
+  back() {
+    this._location.back();
   }
   buildForm(data: any) {
     this.formBuild = new FormGroup({
@@ -96,7 +102,6 @@ export class ViewDocumentComponent implements OnInit {
         Validators.required
       ),
     });
-    console.log(this.formBuild.value);
   }
 
   editDocument() {
@@ -119,8 +124,6 @@ export class ViewDocumentComponent implements OnInit {
             return { id: doc.id, ...doc.data() };
           }),
         ];
-
-        console.log(this.profile);
       });
     } else {
       // this.authService.logout();
@@ -154,20 +157,47 @@ export class ViewDocumentComponent implements OnInit {
   }
   deleteDocument(data: any) {
     this.spinner.show();
-    const storageRef = ref(this.storage, `documents/${data.fileName}`);
+    const storageRef = ref(this.storage, `documents/${data[0].fileName}`);
 
-    deleteObject(storageRef).then(() => {
-      const dbinstance = doc(this.firestore, 'documents/' + data.id);
-      deleteDoc(dbinstance)
-        .then((res) => {
-          this.toastr.success('Document Deleted!', '', { timeOut: 1000 });
-          this.spinner.hide();
-        })
-        .catch((err) => {
-          console.log(err);
-          this.toastr.success('Document Uploaded!');
-        });
-    });
+    deleteObject(storageRef)
+      .then(() => {
+        const dbinstance = doc(this.firestore, 'documents/' + data[0].id);
+
+        deleteDoc(dbinstance)
+          .then((res) => {
+            this.router.navigate(['/user-dashboard/documents/']);
+            this.toastr.success('Document Deleted!', '', { timeOut: 1000 });
+            this.spinner.hide();
+          })
+          .catch((err) => {
+            console.log(err.code);
+            this.toastr.error('Document Uploaded!');
+          });
+      })
+      .catch((err: any) => {
+        console.log(err.code);
+        const dbinstance = doc(this.firestore, 'documents/' + data[0].id);
+
+        deleteDoc(dbinstance)
+          .then((res) => {
+            this.ngOnInit();
+            this.router.navigate(['/user-dashboard/documents/']);
+
+            this.toastr.success('Document Deleted!', '', { timeOut: 1000 });
+            this.spinner.hide();
+          })
+          .catch((err) => {
+            console.log(err.code);
+            this.toastr.error('Document Uploaded!', err.code);
+          });
+
+        this.spinner.hide();
+
+        this.ngOnInit();
+        this.toastr.error('Document deleted!', err.code);
+
+        this.router.navigate(['/user-dashboard/documents/']);
+      });
   }
 
   updateDocument(id: any) {
@@ -190,6 +220,7 @@ export class ViewDocumentComponent implements OnInit {
       })
       .catch((err: any) => {
         console.log(err);
+        this.toastr.success('Document failed to update', err.code);
       });
   }
   requestAccess(id: any) {

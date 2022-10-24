@@ -79,7 +79,7 @@
                   aria-label="Default select example"
                   (change)="searchFilter($event)"
                 >
-                  <option selected value="">Filter:</option>
+                  <option selected value="">All:</option>
                   <option
                     *ngFor="let c of classificationContent"
                     value="{{ c }}"
@@ -367,7 +367,6 @@
               id="select"
               formControlName="classification"
             >
-              <option selected>Classification:</option>
               <option *ngFor="let c of classificationContent" value="{{ c }}">
                 {{ c }}
               </option>

@@ -1,16 +1,9 @@
 <div class="page-wrapper">
-  <div class="breadcrumbs">
-    <nav aria-label="breadcrumb m-0">
-      <ol class="breadcrumb m-0">
-        <li class="breadcrumb-item"><a href="#">Admin</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-      </ol>
-    </nav>
-  </div>
+  <app-bread-crumbs [data]="'Dashboard'"></app-bread-crumbs>
 
   <div class="container-fluid p-0 mt-4">
     <div class="row row-cols-sm-3">
-      <div class="col">
+      <div class="col mb-4">
         <div class="card">
           <div class="container-fluid">
             <div class="row">
@@ -40,7 +33,7 @@
           </div>
         </div>
       </div>
-      <div class="col">
+      <div class="col mb-4">
         <div class="card">
           <div class="container-fluid">
             <div class="row">
@@ -71,7 +64,7 @@
           </div>
         </div>
       </div>
-      <div class="col">
+      <div class="col mb-4">
         <div class="card">
           <div class="container-fluid">
             <div class="row">
@@ -108,11 +101,11 @@
       </div>
     </div>
 
-    <div class="row mt-4">
-      <div class="col">
+    <div class="row">
+      <div class="">
         <div class="charts p-2">
           <div class="row">
-            <div class="col">
+            <div class="col-md-6">
               <canvas
                 baseChart
                 width="400"
@@ -125,7 +118,7 @@
               </canvas>
             </div>
 
-            <div class="col" style="display: grid; place-items: center">
+            <div class="col-md-6" style="display: grid; place-items: center">
               <canvas
                 baseChart
                 [type]="'pie'"

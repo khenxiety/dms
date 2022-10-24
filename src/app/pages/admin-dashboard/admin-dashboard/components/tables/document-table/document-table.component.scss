@@ -1,29 +1,26 @@
 .full-width-table {
   width: 100%;
 }
-button{
+button {
   border-radius: 5px;
 }
-.action-btn{
+.action-btn {
   color: white;
 }
-.modal
-{
-  .form-control{
+.modal {
+  .form-control {
     border-radius: 5px;
     font-size: 15px;
   }
 }
-.edit-btn{
+.edit-btn {
   background-color: var(--bs-success);
 }
-.delete-btn{
+.delete-btn {
   background-color: var(--bs-danger);
-
 }
-.download-btn{
+.download-btn {
   background-color: var(--bs-primary);
-
 }
 
 // .mat-column-name {
@@ -36,96 +33,85 @@ button{
 //   margin-left: 3em;
 // }
 
-
-
-
-
-.action{
+.action {
   display: flex;
   flex-direction: row;
-  padding-block: .8em;
+  padding-block: 0.8em;
   justify-content: space-between;
   align-items: center;
 }
-.action>* + *{
+.action > * + * {
   margin-left: 10px;
 
-  input{
+  input {
     width: 350px;
     height: 100%;
-    background-color: #f2f2f3 ;
+    background-color: #f2f2f3;
     border-color: #f2f2f3;
     font-size: 15px;
     border-radius: 5px;
   }
 }
 
-.custom-btn{
+.custom-btn {
   background-color: #cb2d3c;
   color: white;
   display: flex;
   align-items: center;
-  span{
-    margin-left: .7em;
+  span {
+    margin-left: 0.7em;
   }
 
-
-  &:hover{
+  &:hover {
     background-color: #b32836;
-  color: white;
+    color: white;
   }
 }
 
-.action-cell >*+*{
-margin-left: 10px;
+.action-cell > * + * {
+  margin-left: 10px;
 }
 
-
-.td{
+.td {
   padding-block: 20px;
   text-transform: capitalize;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 80px;
-
-
 }
 
-small{
+small {
   color: #b32836;
 }
-.button-group{
+.button-group {
   display: flex;
   flex-direction: row;
   gap: 5px;
 }
-td.mat-cell{
+td.mat-cell {
   border: none;
-  font-size: .95em;
+  font-size: 0.95em;
   font-weight: 500;
   text-transform: capitalize;
 }
 
- tr.mat-row:nth-child(even){
-  background-color: #FCF4F4;
+tr.mat-row:nth-child(even) {
+  background-color: #fcf4f4;
 }
-      
-tr.mat-row:nth-child(odd){
+
+tr.mat-row:nth-child(odd) {
   background-color: #fff;
 }
-th.mat-header-cell{
-  background-color: #FCF4F4;
+th.mat-header-cell {
+  background-color: #fcf4f4;
   text-transform: capitalize;
   text-align: center;
   font-weight: 700;
-
-
 }
-.flex{
+.flex {
   display: flex;
   align-items: center;
 
   max-width: 25em;
-
 }

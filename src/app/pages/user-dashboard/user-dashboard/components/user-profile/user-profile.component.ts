@@ -103,7 +103,10 @@ export class UserProfileComponent implements OnInit {
           this.spinnr.hide();
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err.code);
+          this.toastr.error(err.code);
+
+          this.spinnr.hide();
         });
     } else {
       console.log('Please login');
@@ -111,7 +114,6 @@ export class UserProfileComponent implements OnInit {
   }
   getDocumentsIhaveAccess(data: any) {
     const uid = localStorage.getItem('user');
-    console.log(this.userData);
     if (uid) {
       const dbinstance = collection(this.firestore, 'documents');
       const q = query(
@@ -129,12 +131,13 @@ export class UserProfileComponent implements OnInit {
               return { ...doc.data(), id: doc.id };
             }),
           ];
-          console.log(this.documents);
 
           this.spinnr.hide();
         })
         .catch((err: any) => {
-          console.log(err.message);
+          console.log(err.code);
+          this.toastr.error(err.code);
+
           this.spinnr.hide();
         });
     } else {
@@ -164,6 +167,8 @@ export class UserProfileComponent implements OnInit {
         })
         .catch((err: any) => {
           console.log(err);
+          this.toastr.error(err.code);
+          this.spinnr.hide();
         });
     } else {
       console.log('test');
@@ -185,7 +190,6 @@ export class UserProfileComponent implements OnInit {
         if (progress === 100) {
           setTimeout(() => {
             getDownloadURL(upload.snapshot.ref).then((url) => {
-              console.log(url);
               this.createDocument(url, upload.snapshot.metadata);
             });
           }, 2000);
@@ -206,7 +210,6 @@ export class UserProfileComponent implements OnInit {
     const updatedoc = doc(this.firestore, 'users', this.userData.id);
     updateDoc(updatedoc, user)
       .then((res: any) => {
-        console.log(res);
         this.spinnr.hide();
         this.toastr.success('Image uploaded successfully');
         this.logsService.addLogsService(
@@ -218,7 +221,9 @@ export class UserProfileComponent implements OnInit {
         this.getData();
       })
       .catch((err: any) => {
-        console.log(err.message);
+        console.log(err.code);
+        this.toastr.error(err.code);
+        this.spinnr.hide();
       });
     this.getData();
   }
@@ -236,7 +241,6 @@ export class UserProfileComponent implements OnInit {
       const updatedoc = doc(this.firestore, 'users', this.userData.id);
       updateDoc(updatedoc, user)
         .then((res: any) => {
-          console.log(res);
           this.spinnr.hide();
           this.logsService.addLogsService(
             `Updates user profile  (Name, Mobile, Address)`,
@@ -252,7 +256,9 @@ export class UserProfileComponent implements OnInit {
           // this.formBuild.reset();
         })
         .catch((err: any) => {
-          console.log(err.message);
+          console.log(err.code);
+          this.toastr.error(err.code);
+          this.spinnr.hide();
         });
     } else {
       this.toastr.error('Please fill up the fields');
@@ -266,8 +272,9 @@ export class UserProfileComponent implements OnInit {
         this.toastr.success('Password Reset Email Sent');
       })
       .catch((err: any) => {
-        console.log(err);
-        this.toastr.error('Sending Password Reset Email failed', err.message);
+        console.log(err.code);
+        this.toastr.error('Sending Password Reset Email failed', err.code);
+        this.spinnr.hide();
       });
   }
 }
