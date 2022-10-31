@@ -20,6 +20,7 @@ export class UserDashboardComponent implements OnInit {
   isCollapsed: boolean = false;
 
   isCollapsed2: boolean = false;
+  imageUrl: any = '';
   constructor(
     private authService: AuthServiceService,
     private firestore: Firestore

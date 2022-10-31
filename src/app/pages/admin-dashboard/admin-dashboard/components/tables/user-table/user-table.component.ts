@@ -325,9 +325,6 @@ export class UserTableComponent implements AfterViewInit {
 
       username: this.updateForm.value.username,
       status: this.updateForm.value.status,
-      displayPicture: '',
-      address: '',
-      mobile: '',
     };
     updateDoc(updateUser, data)
       .then((res: any) => {

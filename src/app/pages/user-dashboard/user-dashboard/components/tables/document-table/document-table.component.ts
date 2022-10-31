@@ -91,6 +91,7 @@ export class DocumentTableComponent implements AfterViewInit {
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/pdf',
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   ];
   isFileValid: boolean = true;
 
@@ -350,6 +351,7 @@ export class DocumentTableComponent implements AfterViewInit {
   }
 
   fileChange(event: any) {
+    console.log(event.target.files[0]);
     if (this.fileRestriction.includes(event.target.files[0].type)) {
       this.file = event.target.files[0];
       this.isFileValid = true;

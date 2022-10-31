@@ -484,24 +484,7 @@
               >Please fill up the missing field.</small
             >
           </div>
-          <div class="mb-3">
-            <label for="filename" class="form-label">Password:</label>
-            <input
-              type="password"
-              class="form-control"
-              id="updatepassword"
-              placeholder=""
-              formControlName="password"
-              #input
-            />
-            <small
-              *ngIf="
-                usersForm.controls['password'].hasError('required') &&
-                usersForm.controls['password'].touched
-              "
-              >Please fill up the missing field.</small
-            >
-          </div>
+
           <div class="mb-3">
             <div class="form-check">
               <input

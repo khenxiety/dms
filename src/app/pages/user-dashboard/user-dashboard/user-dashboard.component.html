@@ -2,6 +2,7 @@
   <app-dashboard-header
     [headerName]="profile?.fullName"
     [isCollapsed]="isCollapsed"
+    [image]="profile?.displayPicture"
   ></app-dashboard-header>
   <div [ngClass]="isCollapsed ? 'side-bar collapsed' : 'side-bar'">
     <div class="side-bar-content">
