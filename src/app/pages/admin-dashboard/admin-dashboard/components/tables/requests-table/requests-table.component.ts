@@ -216,7 +216,7 @@ export class RequestsTableComponent implements AfterViewInit {
     updateDoc(updatedoc, data)
       .then((res: any) => {
         this.updateStatus(row);
-        console.log(res);
+
         this.spinner.hide();
         this.closeRightSideBar();
         this.logsService.addLogsService(

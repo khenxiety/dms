@@ -407,7 +407,7 @@ export class DocumentTableComponent implements AfterViewInit {
       fileName: snap.name,
       fileType: this.formBuild.value.fileType,
       fileUrl: fileUrl,
-      uid: this.currentUser,
+      uid: this.userId,
       canAccess: [
         { accessId: this.userId, accessEmail: this.currentUserEmail },
       ],
