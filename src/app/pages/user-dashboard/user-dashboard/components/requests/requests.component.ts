@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {
   addDoc,
   collection,
+  deleteDoc,
+  doc,
   Firestore,
   getDoc,
   getDocs,
@@ -99,9 +101,60 @@ export class RequestsComponent implements OnInit {
             }),
           ];
 
+          this.getPendingRequests();
+
+          this.spinnr.hide();
+        })
+        .catch((err: any) => {
+          console.log(err);
+        });
+    }
+  }
+
+  getPendingRequests() {
+    const uid = localStorage.getItem('user');
+
+    const dbinstance = collection(this.firestore, 'requests');
+
+    if (uid) {
+      const q = query(
+        dbinstance,
+        orderBy('date', 'desc'),
+        where('uid', '==', uid)
+      );
+
+      getDocs(q)
+        .then((res: any) => {
+          let pendingRequests = [
+            ...res.docs.map((doc: any) => {
+              return { id: doc.id, ...doc.data() };
+            }),
+          ];
+
           this.spinnr.hide();
 
-          console.log(this.requestsData);
+          pendingRequests.map((res) => {
+            console.log(new Date(res.date).getDate(), new Date().getDate());
+
+            if (
+              new Date(res.date).getDate() + 7 == new Date().getDate() &&
+              res.status == 'pending'
+            ) {
+              const deleteRequest = doc(this.firestore, 'requests/' + res.id);
+
+              deleteDoc(deleteRequest)
+                .then((res) => {
+                  console.log('Request expired');
+
+                  this.toastr.info('Request Expired');
+                  this.getRequests();
+                })
+                .catch((err) => {
+                  console.log(err.code);
+                });
+            }
+            // return new Date(res.date).getDate() + 7;
+          });
         })
         .catch((err: any) => {
           console.log(err);
@@ -126,8 +179,6 @@ export class RequestsComponent implements OnInit {
             (item: { id: string }) => item.id == this.documentId
           );
 
-          console.log(this.documentsList);
-
           this.spinnr.hide();
         })
         .catch((err: any) => {
@@ -149,7 +200,6 @@ export class RequestsComponent implements OnInit {
             return;
           });
 
-          console.log(this.documentsList);
           this.spinnr.hide();
         })
         .catch((err: any) => {

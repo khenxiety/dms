@@ -29,9 +29,18 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/ngx-spinner/animations/ball-scale-multiple.css"
+              "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
+              "node_modules/prismjs/themes/prism-okaidia.css",
+              "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/marked/marked.min.js",
+              "node_modules/prismjs/prism.js",
+              "node_modules/prismjs/components/prism-csharp.min.js",
+  "node_modules/prismjs/components/prism-css.min.js",
+              "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.js"
+
+            ]
           },
           "configurations": {
             "production": {
@@ -100,7 +109,9 @@
               "src/styles.scss",
               "node_modules/ngx-spinner/animations/ball-scale-multiple.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/marked/marked.min.js"
+            ]
           }
         },
         "deploy": {

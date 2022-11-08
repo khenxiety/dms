@@ -27,6 +27,7 @@
     "firebase": "^9.9.4",
     "ng2-charts": "^4.0.0",
     "ngx-loader": "^1.0.0",
+    "ngx-markdown": "^14.0.1",
     "ngx-spinner": "^14.0.0",
     "ngx-toastr": "^15.0.0",
     "ngx-ui-loader": "^13.0.0",

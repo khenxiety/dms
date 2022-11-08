@@ -91,6 +91,20 @@ export class UserTableComponent implements AfterViewInit {
   @ViewChild('deleteUserModalClose', { static: false }) deleteUserModalClose:
     | ElementRef
     | undefined;
+
+  campusesList: Array<any> = [
+    'Pablo Borbon',
+    'Alangilan',
+    'ARASOF-Nasugbu',
+    'Balayan',
+    'Lemery',
+    'Mabini',
+    'JPLPC-Malvar',
+    'Lipa',
+    'Rosario',
+    'San Juan',
+    'Lobo',
+  ];
   constructor(
     private firestore: Firestore,
     private auth: Auth,
@@ -166,6 +180,7 @@ export class UserTableComponent implements AfterViewInit {
       campus: new FormControl('', Validators.required),
 
       email: new FormControl('', [Validators.required, Validators.email]),
+      type: new FormControl('', [Validators.required]),
 
       username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
@@ -177,6 +192,7 @@ export class UserTableComponent implements AfterViewInit {
       campus: new FormControl('', Validators.required),
 
       email: new FormControl('', [Validators.required, Validators.email]),
+      type: new FormControl('', [Validators.required]),
 
       username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
@@ -189,6 +205,8 @@ export class UserTableComponent implements AfterViewInit {
       campus: new FormControl(data.campus || '', Validators.required),
       email: new FormControl(data.email || '', Validators.required),
       username: new FormControl(data.username || '', Validators.required),
+      type: new FormControl(data.type || '', [Validators.required]),
+
       status: new FormControl(data.status || '', Validators.required),
     });
   }
@@ -226,6 +244,7 @@ export class UserTableComponent implements AfterViewInit {
       fullName: new FormControl(data.fullName, Validators.required),
       campus: new FormControl(data.campus, Validators.required),
       email: new FormControl(data.email, Validators.required),
+      type: new FormControl(data.type || '', [Validators.required]),
       username: new FormControl(data.username, Validators.required),
       status: new FormControl(data.status, Validators.required),
       uid: new FormControl(data.uid, Validators.required),
@@ -254,6 +273,7 @@ export class UserTableComponent implements AfterViewInit {
       idNumber: this.usersForm.value.idNumber,
       campus: this.usersForm.value.campus,
       email: this.usersForm.value.email,
+      type: this.usersForm.value.type,
       password: this.usersForm.value.password,
       uid: createUser.user.uid,
       username: this.usersForm.value.username,
@@ -322,7 +342,7 @@ export class UserTableComponent implements AfterViewInit {
       idNumber: this.updateForm.value.idNumber,
       campus: this.updateForm.value.campus,
       email: this.updateForm.value.email,
-
+      type: this.updateForm.value.type,
       username: this.updateForm.value.username,
       status: this.updateForm.value.status,
     };

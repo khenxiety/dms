@@ -40,7 +40,6 @@ export class DocumentsComponent implements OnInit {
         ];
 
         this.profile = this.profile[0];
-        console.log(this.profile);
       });
     } else {
       this.authService.logout();

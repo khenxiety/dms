@@ -25,6 +25,7 @@ import {
   doc,
   arrayUnion,
   arrayRemove,
+  where,
 } from '@angular/fire/firestore';
 import {
   FormGroup,
@@ -122,7 +123,6 @@ export class RequestsTableComponent implements AfterViewInit {
           }),
         ];
         this.buildUpdateForm(this.dataItems);
-
         this.dataSource.data = this.dataItems as DataItems[];
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -133,9 +133,57 @@ export class RequestsTableComponent implements AfterViewInit {
       .catch((err: any) => {
         console.log(err.message);
       });
+
+    this.getPendingRequests();
   }
   ngOnInit(): void {
     this.buildForm();
+  }
+
+  getPendingRequests() {
+    const dbinstance = collection(this.firestore, 'requests');
+
+    const q = query(dbinstance, orderBy('date', 'desc'));
+
+    getDocs(q)
+      .then((res: any) => {
+        let pendingRequests = [
+          ...res.docs.map((doc: any) => {
+            return { id: doc.id, ...doc.data() };
+          }),
+        ];
+
+        this.spinner.hide();
+
+        pendingRequests.map((res) => {
+          console.log(new Date(res.date).getDate(), new Date().getDate());
+
+          // if(new Date(res.date).getDate()+7 >=31){
+
+          // }
+          if (
+            new Date(res.date).getDate() + 7 == new Date().getDate() &&
+            res.status == 'pending'
+          ) {
+            const deleteRequest = doc(this.firestore, 'requests/' + res.id);
+
+            deleteDoc(deleteRequest)
+              .then((res) => {
+                console.log('Request expired');
+
+                this.toastr.info('Request Expired');
+                this.ngAfterViewInit();
+              })
+              .catch((err) => {
+                console.log(err.code);
+              });
+          }
+          // return new Date(res.date).getDate() + 7;
+        });
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
   }
   searchFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -147,7 +195,6 @@ export class RequestsTableComponent implements AfterViewInit {
   }
   openRightSideBar(data: any) {
     this.individualData = data;
-    console.log(this.individualData);
     this.rightSideBarIsClosed = this.rightSideBarIsClosed ? false : true;
   }
 

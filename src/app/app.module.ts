@@ -13,7 +13,7 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { ToastrModule } from 'ngx-toastr';
 import { JwtModule, JwtModuleOptions } from '@auth0/angular-jwt';
-
+import { MarkdownModule } from 'ngx-markdown';
 export function tokenGetter() {
   return localStorage.getItem('token');
 }
@@ -21,6 +21,7 @@ export function tokenGetter() {
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    MarkdownModule.forRoot(),
     AppRoutingModule,
     BrowserAnimationsModule,
     NgChartsModule,

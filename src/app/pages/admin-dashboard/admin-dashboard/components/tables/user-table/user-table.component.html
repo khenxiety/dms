@@ -244,9 +244,12 @@
               formControlName="campus"
               (change)="selectCampus()"
             >
-              <option value="BatstateU-Alangilan">BatstateU-Alangilan</option>
-              <option value="BatstateU-Lobo">BatstateU-Lobo</option>
-              <option value="BatstateU-Mabini">BatstateU-Mabini</option>
+              <option
+                *ngFor="let campus of campusesList"
+                value="BatstateU-{{ campus }}"
+              >
+                {{ campus }}
+              </option>
               <option value="others">Others</option>
             </select>
 
@@ -305,6 +308,25 @@
               *ngIf="
                 usersForm.controls['username'].hasError('required') &&
                 usersForm.controls['username'].touched
+              "
+              >Please fill up the missing field.</small
+            >
+          </div>
+          <div class="mb-3">
+            <label for="type" class="form-label">Type:</label>
+            <select
+              name="type"
+              id="type"
+              class="form-select"
+              formControlName="type"
+            >
+              <option value="admin">Administrator</option>
+              <option value="user">User</option>
+            </select>
+            <small
+              *ngIf="
+                usersForm.controls['type'].hasError('required') &&
+                usersForm.controls['type'].touched
               "
               >Please fill up the missing field.</small
             >
@@ -419,9 +441,12 @@
               formControlName="campus"
               (change)="selectCampus()"
             >
-              <option value="BatstateU-Alangilan">BatstateU-Alangilan</option>
-              <option value="BatstateU-Lobo">BatstateU-Lobo</option>
-              <option value="BatstateU-Mabini">BatstateU-Mabini</option>
+              <option
+                *ngFor="let campus of campusesList"
+                value="BatstateU-{{ campus }}"
+              >
+                {{ campus }}
+              </option>
               <option value="others">Others</option>
             </select>
 
@@ -480,6 +505,25 @@
               *ngIf="
                 usersForm.controls['username'].hasError('required') &&
                 usersForm.controls['username'].touched
+              "
+              >Please fill up the missing field.</small
+            >
+          </div>
+          <div class="mb-3">
+            <label for="type" class="form-label">Type:</label>
+            <select
+              name="type"
+              id="type"
+              class="form-select"
+              formControlName="type"
+            >
+              <option value="admin">Administrator</option>
+              <option value="user">User</option>
+            </select>
+            <small
+              *ngIf="
+                usersForm.controls['type'].hasError('required') &&
+                usersForm.controls['type'].touched
               "
               >Please fill up the missing field.</small
             >

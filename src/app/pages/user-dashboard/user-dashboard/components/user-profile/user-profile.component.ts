@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Auth, sendPasswordResetEmail } from '@angular/fire/auth';
 import {
   collection,
+  deleteDoc,
   doc,
   Firestore,
   getDocs,
@@ -163,6 +164,7 @@ export class UserProfileComponent implements OnInit {
             }),
           ];
 
+          this.getPendingRequests();
           this.spinnr.hide();
         })
         .catch((err: any) => {
@@ -172,6 +174,54 @@ export class UserProfileComponent implements OnInit {
         });
     } else {
       console.log('test');
+    }
+  }
+  getPendingRequests() {
+    const uid = localStorage.getItem('user');
+
+    const dbinstance = collection(this.firestore, 'requests');
+
+    if (uid) {
+      const q = query(
+        dbinstance,
+        orderBy('date', 'desc'),
+        where('uid', '==', uid)
+      );
+
+      getDocs(q)
+        .then((res: any) => {
+          let pendingRequests = [
+            ...res.docs.map((doc: any) => {
+              return { id: doc.id, ...doc.data() };
+            }),
+          ];
+
+          this.spinnr.hide();
+
+          pendingRequests.map((res) => {
+            if (
+              new Date(res.date).getDate() + 7 == new Date().getDate() &&
+              res.status == 'pending'
+            ) {
+              const deleteRequest = doc(this.firestore, 'requests/' + res.id);
+
+              deleteDoc(deleteRequest)
+                .then((res) => {
+                  console.log('Request expired');
+
+                  this.toastr.info('Request Expired');
+                  this.getRequests();
+                })
+                .catch((err) => {
+                  console.log(err.code);
+                });
+            }
+            // return new Date(res.date).getDate() + 7;
+          });
+        })
+        .catch((err: any) => {
+          console.log(err);
+        });
     }
   }
 

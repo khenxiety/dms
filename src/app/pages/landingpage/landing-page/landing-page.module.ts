@@ -14,6 +14,13 @@ import { AdminLoginComponent } from './components/admin-login/admin-login.compon
 import { MatButtonModule } from '@angular/material/button';
 import { AuthGuardService as AuthGuard } from 'src/app/services/auth/auth-guard.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { InstructionsComponent } from './components/instructions/instructions.component';
+import { MarkdownModule } from 'ngx-markdown';
+
+import 'prismjs';
+import 'prismjs/components/prism-typescript.min.js';
+import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
+import 'prismjs/plugins/line-highlight/prism-line-highlight.js';
 const routes: Routes = [
   {
     path: '',
@@ -22,6 +29,10 @@ const routes: Routes = [
       {
         path: 'hero',
         component: HeroComponent,
+      },
+      {
+        path: 'help',
+        component: InstructionsComponent,
       },
       {
         path: 'about-us',
@@ -60,6 +71,7 @@ const routes: Routes = [
     LoginComponent,
     FooterComponent,
     AdminLoginComponent,
+    InstructionsComponent,
   ],
   imports: [
     CommonModule,
@@ -69,6 +81,7 @@ const routes: Routes = [
     AdminDashboardModule,
     MatButtonModule,
     NgxSpinnerModule,
+    MarkdownModule,
   ],
 })
 export class LandingPageModule {}
