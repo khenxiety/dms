@@ -1,6 +1,7 @@
 
 *,h1,h2,h3,h4,h5{
     font-family: 'Nunito', sans-serif;
+    font-weight: 600;
 }
 .page-wrapper{
     min-height:100vh ;
@@ -15,6 +16,11 @@
 .flex{
     transform: translateY(-85px);
     
+}
+
+h1,h2{
+    color: #ff3e3e;
+
 }
 .text-wrapper{
     background: #ff3e3ec7;

@@ -17,6 +17,8 @@ import {
   Validators,
   FormControl,
 } from '@angular/forms';
+import { Location } from '@angular/common';
+
 @Component({
   selector: 'app-view-document',
   templateUrl: './view-document.component.html',
@@ -43,7 +45,8 @@ export class ViewDocumentComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private firestore: Firestore,
     private spinner: NgxSpinnerService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private _location: Location
   ) {
     this.documentId = this.activatedRoute.snapshot.params['id'];
   }
@@ -176,5 +179,9 @@ export class ViewDocumentComponent implements OnInit {
       .catch((err: any) => {
         console.log(err);
       });
+  }
+
+  back() {
+    this._location.back();
   }
 }

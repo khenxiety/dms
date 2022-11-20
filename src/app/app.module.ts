@@ -14,6 +14,7 @@ import { provideStorage, getStorage } from '@angular/fire/storage';
 import { ToastrModule } from 'ngx-toastr';
 import { JwtModule, JwtModuleOptions } from '@auth0/angular-jwt';
 import { MarkdownModule } from 'ngx-markdown';
+import { provideAnalytics,getAnalytics,ScreenTrackingService,UserTrackingService } from '@angular/fire/analytics';
 export function tokenGetter() {
   return localStorage.getItem('token');
 }
@@ -35,8 +36,11 @@ export function tokenGetter() {
         tokenGetter: tokenGetter,
       },
     }),
+    provideAnalytics(() => getAnalytics()),
   ],
-  providers: [],
+  providers: [
+    ScreenTrackingService,UserTrackingService
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

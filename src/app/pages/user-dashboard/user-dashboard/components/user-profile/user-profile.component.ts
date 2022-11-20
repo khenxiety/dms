@@ -136,7 +136,7 @@ export class UserProfileComponent implements OnInit {
           this.spinnr.hide();
         })
         .catch((err: any) => {
-          console.log(err.code);
+          console.log(err);
           this.toastr.error(err.code);
 
           this.spinnr.hide();

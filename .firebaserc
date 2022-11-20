@@ -1,14 +1,15 @@
 {
   "targets": {
-    "manuscript-management-system": {
+    
+    "bsu-documentmanagementsystem": {
       "hosting": {
         "frontend": [
-          "manuscript-management-system"
+          "bsu-documentmanagementsystem"
         ]
       }
     }
   },
   "projects": {
-    "default": "manuscript-management-system"
+    "default": "bsu-documentmanagementsystem"
   }
 }
