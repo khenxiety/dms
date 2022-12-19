@@ -200,8 +200,8 @@ export class UserProfileComponent implements OnInit {
 
           pendingRequests.map((res) => {
             if (
-              new Date(res.date).getDate() + 7 == new Date().getDate() &&
-              res.status == 'pending'
+              res.expiration == new Date().toLocaleDateString() &&
+              res.status == 'rejected'
             ) {
               const deleteRequest = doc(this.firestore, 'requests/' + res.id);
 

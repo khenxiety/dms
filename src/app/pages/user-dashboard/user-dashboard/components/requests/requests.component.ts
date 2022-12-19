@@ -137,8 +137,8 @@ export class RequestsComponent implements OnInit {
             console.log(new Date(res.date).getDate(), new Date().getDate());
 
             if (
-              new Date(res.date).getDate() + 7 == new Date().getDate() &&
-              res.status == 'pending'
+              res.expiration == new Date().toLocaleDateString() &&
+              res.status == 'rejected'
             ) {
               const deleteRequest = doc(this.firestore, 'requests/' + res.id);
 
