@@ -137,7 +137,7 @@
     <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
       <td mat-cell *matCellDef="let row" class="td">
-        {{ row.dateAdded | date: "medium" }}
+        {{ row.dateAdded | date : "medium" }}
       </td>
     </ng-container>
     <ng-container matColumnDef="campus">
@@ -313,7 +313,7 @@
               >Please upload a file.</small
             >
             <small *ngIf="!isFileValid"
-              >Invalid file. Must be (docx, xlsx, pdf, word or ppt)</small
+              >Invalid file. Must be (docx, xlsx, pdf, word)</small
             >
           </div>
           <div class="mb-3">
@@ -366,7 +366,6 @@
               <option value="xlsx">Excel</option>
               <option value="pdf">Pdf</option>
               <option value="docx">Word/Docx</option>
-              <option value="ppt">Power Point</option>
             </select>
             <small
               *ngIf="

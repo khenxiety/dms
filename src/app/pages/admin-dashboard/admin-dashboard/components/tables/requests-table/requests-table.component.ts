@@ -3,6 +3,7 @@ import {
   Component,
   HostListener,
   ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -13,7 +14,8 @@ import {
   updateProfile,
   deleteUser,
 } from '@angular/fire/auth';
-
+import emailjs, { EmailJSResponseStatus, init } from '@emailjs/browser';
+init('bLL2mnmGN5sMJJ-dH');
 import {
   collection,
   addDoc,
@@ -61,6 +63,9 @@ export class RequestsTableComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<DataItems>;
+
+  @ViewChild('remarksmodalclose') remarksmodalclose: ElementRef | undefined;
+
   dataSource: MatTableDataSource<DataItems>;
   selection = new SelectionModel<DataItems>(true, []);
   isSelected: boolean = false;
@@ -71,11 +76,15 @@ export class RequestsTableComponent implements AfterViewInit {
   public usersForm: FormGroup = new FormGroup({});
   public updateForm: FormGroup = new FormGroup({});
 
+  public remarks: string = '';
+
   dataItems: any;
 
   rightSideBarIsClosed: boolean = true;
   individualData: any = [];
   deleteBoolean: boolean = false;
+
+  public selectedRow: any[] = [];
   constructor(
     private firestore: Firestore,
     private auth: Auth,
@@ -161,9 +170,10 @@ export class RequestsTableComponent implements AfterViewInit {
           // if(new Date(res.date).getDate()+7 >=31){
 
           // }
+          console.log(res.expiration);
           if (
-            new Date(res.date).getDate() + 7 == new Date().getDate() &&
-            res.status == 'pending'
+            res.expiration == new Date().toLocaleDateString() &&
+            res.status == 'rejected'
           ) {
             const deleteRequest = doc(this.firestore, 'requests/' + res.id);
 
@@ -263,6 +273,22 @@ export class RequestsTableComponent implements AfterViewInit {
     updateDoc(updatedoc, data)
       .then((res: any) => {
         this.updateStatus(row);
+        let email = {
+          to_email: row.requesterName,
+          status: 'approved',
+
+          message: `Your request to a document ${row.fileRequested} has been approved `,
+        };
+        emailjs
+          .send(
+            'service_hp4emrd',
+            'template_uremtz9',
+            email,
+            'bLL2mnmGN5sMJJ-dH'
+          )
+          .then((res: EmailJSResponseStatus) => {
+            console.log(res.text);
+          });
 
         this.spinner.hide();
         this.closeRightSideBar();
@@ -283,16 +309,58 @@ export class RequestsTableComponent implements AfterViewInit {
     this.ngOnInit();
   }
 
-  deleteRequest(id: any) {
-    const dbInstance = doc(this.firestore, 'requests/' + id);
-    deleteDoc(dbInstance)
-      .then((res: any) => {
-        console.log(res);
+  selectRow(row: any): void {
+    this.selectedRow = row;
+  }
+
+  deleteRequest(row: any) {
+    const dbInstance = doc(this.firestore, 'requests/' + row.id);
+    let data = {
+      status: 'rejected',
+      expiration: new Date(
+        new Date().setDate(new Date().getDate() + 3)
+      ).toLocaleDateString(),
+    };
+    let email = {
+      to_email: row.requesterName,
+      status: 'rejected',
+
+      message: `Your request to a document ${row.fileRequested} was rejected for a reason of ${this.remarks}`,
+    };
+
+    updateDoc(dbInstance, data)
+      .then((res) => {
+        emailjs
+          .send(
+            'service_hp4emrd',
+            'template_uremtz9',
+            email,
+            'bLL2mnmGN5sMJJ-dH'
+          )
+          .then((res: EmailJSResponseStatus) => {
+            console.log(res.text);
+          });
+        this.remarksmodalclose?.nativeElement.click();
+
+        this.spinner.hide();
         this.ngAfterViewInit();
+        this.ngOnInit();
+        this.toastr.success(
+          'An email has been sent to the requester',
+          'Request rejected successfully'
+        );
       })
-      .catch((err: any) => {
-        console.log(err);
+      .catch((err) => {
+        console.log(err.message);
       });
+    // deleteDoc(dbInstance)
+    //   .then((res: any) => {
+    //     console.log(res);
+    //     this.ngAfterViewInit();
+    //   })
+    //   .catch((err: any) => {
+    //     console.log(err);
+    //   });
   }
 
   removeRequest(data: any) {}

@@ -91,7 +91,6 @@ export class DocumentTableComponent implements AfterViewInit {
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/pdf',
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   ];
   isFileValid: boolean = true;
 
@@ -251,11 +250,8 @@ export class DocumentTableComponent implements AfterViewInit {
       this.displayedColumns = [
         'id',
         'name',
-        // 'description',
         'classification',
         'file type',
-        // 'date',
-        // 'campus',
         'action',
       ];
       const uid = localStorage.getItem('user');
